@@ -1,0 +1,52 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python -m http.server 8000)",
+      "Bash(kill %1)",
+      "WebFetch(domain:getdesign.md)",
+      "Read(//c/Users/aaron/**)",
+      "Read(//c/Users/aaron/tools/**)",
+      "Bash(bun --version)",
+      "Bash(npm --version)",
+      "Bash(npm create *)",
+      "Bash(npm install *)",
+      "Bash(npx tailwindcss *)",
+      "Bash(PowerShell -Command \"irm bun.sh/install.ps1 | iex\")",
+      "Bash(~/.bun/bin/bun install *)",
+      "Bash(mkdir -p ~/.nano-banana)",
+      "Bash(echo \"GEMINI_API_KEY=apikey-246dddebfd2f46dca7db57b0bd6c0bcb\")",
+      "Bash(~/.bun/bin/bun link *)",
+      "Bash(~/.bun/bin/bun run *)",
+      "Bash('~/.bun/bin/bun' run *)",
+      "Bash(curl -L \"https://motionsites.ai/assets/hero-finlytic-preview-CV9g0FHP.gif\" -o \"c:/Users/aaron/Downloads/Nettisivujenluominen/studio-landing/src/assets/feature-1.gif\")",
+      "Bash(curl -L \"https://motionsites.ai/assets/hero-wealth-preview-B70idl_u.gif\" -o \"c:/Users/aaron/Downloads/Nettisivujenluominen/studio-landing/src/assets/feature-2.gif\")",
+      "Bash(wait)",
+      "Bash(npm run *)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:5173)",
+      "Bash(netstat -ano)",
+      "Bash(awk '{print $5}')",
+      "Bash(xargs -I {} taskkill //F //PID {})",
+      "Bash(npx --yes serve . --listen 3001)",
+      "Skill(update-config)",
+      "Skill(update-config:*)",
+      "Bash(python3 -m http.server 3002)",
+      "Bash(npx getdesign@latest add raycast)",
+      "Bash(ffprobe -v quiet -print_format json -show_streams -show_format \"c:/Users/aaron/Desktop/Nettisivujenluominen/mp_.mp4\")",
+      "Bash(ffmpeg -i \"c:/Users/aaron/Desktop/Nettisivujenluominen/mp_.mp4\" -vf \"select=eq\\(n\\\\,0\\)\" -vframes 1 \"c:/Users/aaron/Desktop/Nettisivujenluominen/ealize-sites-v2/first_frame_check.jpg\" -y)",
+      "Bash(ffmpeg -i \"c:/Users/aaron/Desktop/Nettisivujenluominen/mp_.mp4\" -vf \"select=eq\\(n\\\\,0\\)\" -vframes 1 -update 1 \"c:/Users/aaron/Desktop/Nettisivujenluominen/ealize-sites-v2/first_frame_check.jpg\" -y)",
+      "Bash(ffmpeg -i \"c:/Users/aaron/Desktop/Nettisivujenluominen/mp_.mp4\" -vf \"fps=15,scale=1280:-2\" -q:v 2 \"c:/Users/aaron/Desktop/Nettisivujenluominen/ealize-sites-v2/frames/frame_%04d.jpg\" -y)",
+      "Bash(python3 -m http.server 3003)",
+      "Bash(pkill -f \"http.server 3003\")",
+      "Bash(python3 -c ' *)",
+      "Bash(ffprobe -v quiet -print_format json -show_streams \"c:/Users/aaron/Desktop/Nettisivujenluominen/Ealizelandingpage/animation.mp4\")",
+      "Bash(ffprobe -v quiet -print_format json -show_streams \"c:/Users/aaron/Desktop/Nettisivujenluominen/Ealizelandingpage/ealize-add.mp4\")",
+      "Bash(ffmpeg -i \"c:/Users/aaron/Desktop/Nettisivujenluominen/Ealizelandingpage/animation.mp4\" -vf \"select=eq\\(n\\\\,0\\)\" -vframes 1 -update 1 \"c:/Users/aaron/Desktop/Nettisivujenluominen/ealize-sites-v2/anim_check.jpg\" -y)",
+      "Bash(ffmpeg -i \"c:/Users/aaron/Desktop/Nettisivujenluominen/Ealizelandingpage/ealize-add.mp4\" -vf \"select=eq\\(n\\\\,0\\)\" -vframes 1 -update 1 \"c:/Users/aaron/Desktop/Nettisivujenluominen/ealize-sites-v2/ealize_add_check.jpg\" -y)",
+      "Bash(ffprobe -v quiet -print_format json -show_streams -show_format \"c:/Users/aaron/Desktop/Nettisivujenluominen/red_wave_animation_bgmp_.mp4\")",
+      "Bash(ffmpeg -i \"c:/Users/aaron/Desktop/Nettisivujenluominen/red_wave_animation_bgmp_.mp4\" -vf \"select=eq\\(n\\\\,0\\)\" -vframes 1 -update 1 \"c:/Users/aaron/Desktop/Nettisivujenluominen/ealize-sites-v2/red_check.jpg\" -y)"
+    ],
+    "additionalDirectories": [
+      "C:\\Users\\aaron\\.claude"
+    ]
+  }
+}

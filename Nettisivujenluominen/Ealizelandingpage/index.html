@@ -1,0 +1,1524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Ealize — AI-Powered Software Development</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script type="text/babel" src="tweaks-panel.jsx"></script>
+
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: #080712; color: #e8e4f0; font-family: 'Inter', sans-serif; overflow-x: hidden; }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: #080712; }
+  ::-webkit-scrollbar-thumb { background: #3d2f7a; border-radius: 3px; }
+
+  /* Typography */
+  .serif { font-family: 'Libre Baskerville', serif; }
+
+  /* Utility */
+  .section { position: relative; width: 100%; overflow: hidden; }
+
+  /* Glow layers */
+  .glow-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    pointer-events: none;
+    z-index: 0;
+  }
+</style>
+</head>
+<body>
+
+<div id="root"></div>
+
+<script type="text/babel">
+const { useState, useEffect, useRef, useCallback } = React;
+
+// ─── THEME VARIANTS ──────────────────────────────────────────────────────────
+const THEMES = {
+  cosmic: {
+    name: "Dark Cosmic",
+    bg: "#080712",
+    bgAlt: "#0c0b1a",
+    accent: "oklch(0.55 0.25 280)",
+    accentHex: "#6c3ce1",
+    accentRgb: "108,60,225",
+    cta: "oklch(0.55 0.25 280)",
+    ctaHex: "#6c3ce1",
+    ctaText: "#fff",
+    badge: "rgba(108,60,225,0.15)",
+    badgeBorder: "rgba(108,60,225,0.4)",
+    badgeDot: "#a78bfa",
+    card: "rgba(255,255,255,0.03)",
+    cardBorder: "rgba(255,255,255,0.06)",
+    orb1: "rgba(108,60,225,0.18)",
+    orb2: "rgba(60,30,160,0.15)",
+    nodeColor: "108,60,225",
+    pricingHighlight: "#6c3ce1",
+  },
+  editorial: {
+    name: "Bold Editorial",
+    bg: "#04030a",
+    bgAlt: "#0a0818",
+    accent: "oklch(0.62 0.22 270)",
+    accentHex: "#8b5cf6",
+    accentRgb: "139,92,246",
+    cta: "#ffffff",
+    ctaHex: "#ffffff",
+    ctaText: "#04030a",
+    badge: "rgba(255,255,255,0.07)",
+    badgeBorder: "rgba(255,255,255,0.15)",
+    badgeDot: "#c4b5fd",
+    card: "rgba(255,255,255,0.02)",
+    cardBorder: "rgba(255,255,255,0.08)",
+    orb1: "rgba(80,40,200,0.12)",
+    orb2: "rgba(140,90,255,0.08)",
+    nodeColor: "139,92,246",
+    pricingHighlight: "#8b5cf6",
+  },
+  fire: {
+    name: "Void + Fire",
+    bg: "#070610",
+    bgAlt: "#0e0a1c",
+    accent: "oklch(0.68 0.2 50)",
+    accentHex: "#f97316",
+    accentRgb: "249,115,22",
+    cta: "oklch(0.68 0.2 50)",
+    ctaHex: "#f97316",
+    ctaText: "#fff",
+    badge: "rgba(249,115,22,0.12)",
+    badgeBorder: "rgba(249,115,22,0.35)",
+    badgeDot: "#fb923c",
+    card: "rgba(255,255,255,0.03)",
+    cardBorder: "rgba(255,255,255,0.06)",
+    orb1: "rgba(100,40,220,0.2)",
+    orb2: "rgba(249,115,22,0.1)",
+    nodeColor: "160,100,255",
+    pricingHighlight: "#f97316",
+  },
+};
+
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "theme": "cosmic",
+  "showPricing": true,
+  "heroHeadline": "Software Built Smarter.",
+  "ctaLabel": "Start Your Project"
+}/*EDITMODE-END*/;
+
+// ─── COPY (EN / FI) ──────────────────────────────────────────────────────────
+// Finnish copy is written natively — not a literal translation of the English.
+const COPY = {
+  en: {
+    nav: { services: 'Services', howItWorks: 'How It Works', pricing: 'Pricing', contact: 'Contact', getStarted: 'Get Started' },
+    hero: {
+      badge: 'Now Taking New Clients',
+      headline: 'Software Built Smarter.',
+      subtitle: "We build custom web apps, platforms, and digital tools — fast, precise, and AI-native — for businesses that can't afford to wait.",
+      ctaPrimary: 'Start Your Project',
+      ctaSecondary: 'See How It Works',
+      scroll: 'Scroll',
+      stats: [
+        { val: '100%', label: 'AI-Augmented Dev' },
+        { val: '2–4 wk', label: 'Avg. First Delivery' },
+        { val: '3×', label: 'Faster Than Agencies' },
+      ],
+    },
+    process: {
+      tag: 'Process',
+      titleStart: 'From idea to launch,',
+      titleEm: 'without the chaos.',
+      steps: [
+        { num: '01', title: 'Discovery Call', desc: 'We learn your goals, stack, and timeline. No fluff — just the essentials to scope your project accurately.' },
+        { num: '02', title: 'Proposal & Plan', desc: "Clear scope, fixed price, realistic timeline. You know exactly what you're getting before we write a single line of code." },
+        { num: '03', title: 'Build & Iterate', desc: 'We ship in sprints. You see real progress weekly, give feedback, and we adapt. No black boxes.' },
+        { num: '04', title: 'Launch & Support', desc: 'We deploy your product and stay on hand for fixes, features, and scaling. You grow — we grow with you.' },
+      ],
+    },
+    services: {
+      tag: 'Services',
+      titleStart: 'Everything you need to ship',
+      titleEm: 'great software.',
+      sideHeader: 'What we offer',
+      cards: [
+        { title: 'Website Design for Businesses', desc: 'Stunning, conversion-focused websites with smooth animations and a premium feel — at a price that makes sense for your business.', tag: 'Most Popular' },
+        { title: 'Mobile Apps Straight to the App Store', desc: 'Full-stack apps built with modern frameworks. Fast, scalable, tailored to your workflow.', tag: 'Mobile' },
+        { title: 'AI Integration', desc: 'We embed intelligence into your product — smart search, predictive features, automated workflows.', tag: 'AI' },
+        { title: 'Animated Ads & Social Media Automation', desc: 'Create eye-catching animated ads and automate your social media campaigns. We design and manage strategies that drive engagement and growth without breaking your budget.', tag: 'Marketing' },
+        { title: 'API & Backend Systems', desc: 'Robust REST or GraphQL APIs, database design, auth, and all the infrastructure to scale.', tag: 'Backend' },
+        { title: 'Ongoing Partnership', desc: 'Retainer plans for continuous development, bug fixes, and strategic input. We grow with you.', tag: 'Support' },
+      ],
+    },
+    pricing: {
+      tag: 'Pricing',
+      titleLine1: 'Honest prices.',
+      titleEm: 'No agency markup.',
+      mostPopular: 'Most Popular',
+      customLine: 'Need something custom?',
+      customCta: "Let's talk →",
+      plans: [
+        { name: 'Starter', price: '€1,499', period: 'one-time', desc: 'Perfect for landing pages, simple apps, or validating an MVP idea.', features: ['Up to 5 pages or screens', 'Custom UI design', 'Mobile responsive', '2 weeks delivery', '1 revision round', '2 weeks post-launch support'], cta: 'Get Started' },
+        { name: 'Growth', price: '€3,999', period: 'one-time', desc: 'For businesses ready to build a full product with real functionality.', features: ['Full-stack web application', 'Database & API design', 'User auth & dashboard', 'AI feature integration', '4–6 weeks delivery', '3 months support'], cta: 'Most Popular' },
+        { name: 'Partner', price: '€1,200', period: 'per month', desc: 'Ongoing development partnership — your dev team, on demand.', features: ['Weekly sprints', 'Dedicated Slack channel', 'Unlimited revisions', 'Priority support', 'Monthly strategy call', 'Scale up or down anytime'], cta: "Let's Talk" },
+      ],
+    },
+    contact: {
+      tag: 'Get In Touch',
+      titleLine1: 'Ready to build',
+      titleEm: 'something great?',
+      subtitle: 'Tell us about your project. We typically respond within 24 hours.',
+      namePh: 'Name',
+      emailPh: 'Email',
+      messagePh: 'Tell us about your project...',
+      submit: 'Send Message →',
+      successTitle: 'Message received.',
+      successDesc: "We'll be in touch within 24 hours.",
+    },
+    footer: { copyright: '© 2026 Ealize. All rights reserved.', links: ['Privacy', 'Terms', 'Contact'] },
+  },
+  fi: {
+    nav: { services: 'Palvelut', howItWorks: 'Toimintatapa', pricing: 'Hinnasto', contact: 'Yhteys', getStarted: 'Aloita nyt' },
+    hero: {
+      badge: 'Otamme uusia asiakkaita',
+      headline: 'Ohjelmistoja, fiksummin.',
+      subtitle: 'Rakennamme räätälöityjä verkkosovelluksia, alustoja ja digityökaluja — nopeasti, täsmällisesti ja tekoäly edellä — yrityksille joilla ei ole varaa odottaa.',
+      ctaPrimary: 'Käynnistä projekti',
+      ctaSecondary: 'Katso miten se toimii',
+      scroll: 'Vieritä',
+      stats: [
+        { val: '100%', label: 'Tekoälyavusteista' },
+        { val: '2–4 vk', label: 'Keskim. toimitus' },
+        { val: '3×', label: 'Nopeampi kuin toimisto' },
+      ],
+    },
+    process: {
+      tag: 'Prosessi',
+      titleStart: 'Ideasta julkaisuun —',
+      titleEm: 'ilman sähläystä.',
+      steps: [
+        { num: '01', title: 'Tutustumispalaveri', desc: 'Käymme läpi tavoitteesi, teknologiat ja aikataulun. Ei ylimääräistä — vain se mitä tarvitsemme arvioidaksemme projektin tarkasti.' },
+        { num: '02', title: 'Tarjous ja suunnitelma', desc: 'Selkeä laajuus, kiinteä hinta, realistinen aikataulu. Tiedät tarkalleen mitä saat ennen kuin kirjoitamme yhtään riviä koodia.' },
+        { num: '03', title: 'Rakennus ja kehitys', desc: 'Etenemme sprinteissä. Näet konkreettista edistystä viikoittain, annat palautetta ja muokkaamme matkan varrella. Ei mustia laatikoita.' },
+        { num: '04', title: 'Julkaisu ja tuki', desc: 'Viemme tuotteesi tuotantoon ja jäämme apuun korjauksiin, jatkokehitykseen ja skaalaamiseen. Sinä kasvat — me kasvamme mukana.' },
+      ],
+    },
+    services: {
+      tag: 'Palvelut',
+      titleStart: 'Kaikki tarvittava,',
+      titleEm: 'yhdestä osoitteesta.',
+      sideHeader: 'Mitä tarjoamme',
+      cards: [
+        { title: 'Verkkosivut yrityksille', desc: 'Näyttäviä, myyntiin tähtääviä verkkosivuja sulavalla animoinnilla ja premium-tunnelmalla — hinnalla joka istuu yrityksesi budjettiin.', tag: 'Suosituin' },
+        { title: 'Mobiilisovellukset suoraan AppStoreen', desc: 'Täyden palvelun sovellukset modernein työkaluin. Nopeita, skaalautuvia ja juuri sinun toimintaasi sopivia.', tag: 'Mobiili' },
+        { title: 'Tekoäly osaksi tuotetta', desc: 'Liitämme älyä tuotteeseesi — älykäs haku, ennustavat toiminnot ja automatisoidut työnkulut.', tag: 'AI' },
+        { title: 'Markkinointi', desc: 'Luomme silmiä räväyttäviä animoituja mainoksia ja automatisoituja sosiaalisen median kampanjoita. Lisäämme näkyvyyttä ja kasvatusta ilman että se puhaisee mainontabudjettia.', tag: 'Markkinointi' },
+        { title: 'API- ja taustajärjestelmät', desc: 'Vakaat REST- tai GraphQL-rajapinnat, tietokannat, tunnistautuminen ja kaikki infra mitä skaalautuminen vaatii.', tag: 'Backend' },
+        { title: 'Pitkäaikainen kumppanuus', desc: 'Jatkuvan kehityksen sopimukset, virheenkorjaukset ja strateginen sparraus. Kasvamme rinnallasi.', tag: 'Tuki' },
+      ],
+    },
+    pricing: {
+      tag: 'Hinnasto',
+      titleLine1: 'Reilut hinnat.',
+      titleEm: 'Ei toimistolisiä.',
+      mostPopular: 'Suosituin',
+      customLine: 'Tarvitsetko jotain räätälöityä?',
+      customCta: 'Otetaan yhteys →',
+      plans: [
+        { name: 'Aloitus', price: '€1 499', period: 'kerralla', desc: 'Sopii laskeutumissivuihin, kevyihin sovelluksiin ja MVP-idean testaamiseen.', features: ['Enintään 5 sivua tai näkymää', 'Räätälöity käyttöliittymä', 'Toimii mobiilissa', 'Toimitus 2 viikossa', 'Yksi muokkauskierros', 'Tuki 2 viikkoa julkaisun jälkeen'], cta: 'Aloita' },
+        { name: 'Kasvu', price: '€3 999', period: 'kerralla', desc: 'Yrityksille jotka ovat valmiita rakentamaan oikean tuotteen oikealla toiminnallisuudella.', features: ['Täyden palvelun verkkosovellus', 'Tietokanta- ja API-suunnittelu', 'Käyttäjätunnistus ja hallintapaneeli', 'Tekoälyominaisuudet mukaan', 'Toimitus 4–6 viikossa', '3 kuukauden tuki'], cta: 'Suosituin' },
+        { name: 'Kumppani', price: '€1 200', period: 'kuukaudessa', desc: 'Jatkuvan kehityksen kumppanuus — oma kehitystiimi käden ulottuvilla.', features: ['Viikoittaiset sprintit', 'Oma Slack-kanava', 'Rajaton määrä muokkauksia', 'Etusijainen tuki', 'Kuukausittainen strategiapalaveri', 'Skaalaa milloin haluat'], cta: 'Otetaan yhteys' },
+      ],
+    },
+    contact: {
+      tag: 'Yhteydenotto',
+      titleLine1: 'Valmis rakentamaan',
+      titleEm: 'jotain hienoa?',
+      subtitle: 'Kerro projektistasi. Vastaamme yleensä vuorokauden sisällä.',
+      namePh: 'Nimi',
+      emailPh: 'Sähköposti',
+      messagePh: 'Kerro projektistasi...',
+      submit: 'Lähetä viesti →',
+      successTitle: 'Viesti vastaanotettu.',
+      successDesc: 'Olemme yhteydessä vuorokauden sisällä.',
+    },
+    footer: { copyright: '© 2026 Ealize. Kaikki oikeudet pidätetään.', links: ['Tietosuoja', 'Ehdot', 'Yhteys'] },
+  },
+};
+
+// ─── NODE CANVAS ANIMATION ────────────────────────────────────────────────────
+function NodeCanvas({ nodeColor }) {
+  const canvasRef = useRef(null);
+  const animRef = useRef(null);
+  const nodesRef = useRef([]);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    let W = canvas.offsetWidth;
+    let H = canvas.offsetHeight;
+    canvas.width = W;
+    canvas.height = H;
+
+    const N = Math.floor((W * H) / 14000);
+    nodesRef.current = Array.from({ length: N }, () => ({
+      x: Math.random() * W,
+      y: Math.random() * H,
+      vx: (Math.random() - 0.5) * 0.35,
+      vy: (Math.random() - 0.5) * 0.35,
+      r: Math.random() * 2 + 1,
+      pulse: Math.random() * Math.PI * 2,
+    }));
+
+    const draw = () => {
+      ctx.clearRect(0, 0, W, H);
+      const nodes = nodesRef.current;
+      const [r, g, b] = nodeColor.split(',');
+
+      nodes.forEach(n => {
+        n.x += n.vx;
+        n.y += n.vy;
+        n.pulse += 0.02;
+        if (n.x < 0 || n.x > W) n.vx *= -1;
+        if (n.y < 0 || n.y > H) n.vy *= -1;
+      });
+
+      // Draw connections
+      for (let i = 0; i < nodes.length; i++) {
+        for (let j = i + 1; j < nodes.length; j++) {
+          const dx = nodes[i].x - nodes[j].x;
+          const dy = nodes[i].y - nodes[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          const maxDist = 160;
+          if (dist < maxDist) {
+            const alpha = (1 - dist / maxDist) * 0.35;
+            ctx.strokeStyle = `rgba(${r},${g},${b},${alpha})`;
+            ctx.lineWidth = 0.8;
+            ctx.beginPath();
+            ctx.moveTo(nodes[i].x, nodes[i].y);
+            ctx.lineTo(nodes[j].x, nodes[j].y);
+            ctx.stroke();
+          }
+        }
+      }
+
+      // Draw nodes
+      nodes.forEach(n => {
+        const pulse = Math.sin(n.pulse) * 0.5 + 0.5;
+        const alpha = 0.5 + pulse * 0.5;
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, n.r + pulse * 0.5, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${r},${g},${b},${alpha})`;
+        ctx.fill();
+
+        // Glow halo
+        const grad = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, n.r * 4);
+        grad.addColorStop(0, `rgba(${r},${g},${b},${0.15 * pulse})`);
+        grad.addColorStop(1, `rgba(${r},${g},${b},0)`);
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, n.r * 4, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      animRef.current = requestAnimationFrame(draw);
+    };
+
+    draw();
+
+    const resize = () => {
+      W = canvas.offsetWidth;
+      H = canvas.offsetHeight;
+      canvas.width = W;
+      canvas.height = H;
+    };
+    window.addEventListener('resize', resize);
+    return () => {
+      cancelAnimationFrame(animRef.current);
+      window.removeEventListener('resize', resize);
+    };
+  }, [nodeColor]);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      style={{
+        position: 'absolute', inset: 0, width: '100%', height: '100%',
+        opacity: 0.7, zIndex: 0, pointerEvents: 'none',
+      }}
+    />
+  );
+}
+
+// ─── LOGO SVG ─────────────────────────────────────────────────────────────────
+function EalizeLogo({ color = "#a78bfa", size = 32 }) {
+  return (
+    <svg width={size * 2.4} height={size * 0.7} viewBox="0 0 120 35" fill="none" xmlns="http://www.w3.org/2000/svg">
+      {/* Node network icon */}
+      <circle cx="10" cy="17" r="4" fill={color} opacity="0.9"/>
+      <circle cx="26" cy="8" r="3" fill={color} opacity="0.7"/>
+      <circle cx="26" cy="26" r="3" fill={color} opacity="0.7"/>
+      <circle cx="40" cy="17" r="4" fill={color} opacity="0.9"/>
+      <line x1="14" y1="17" x2="23" y2="9.5" stroke={color} strokeWidth="1.5" opacity="0.5"/>
+      <line x1="14" y1="17" x2="23" y2="24.5" stroke={color} strokeWidth="1.5" opacity="0.5"/>
+      <line x1="29" y1="8" x2="36" y2="15" stroke={color} strokeWidth="1.5" opacity="0.5"/>
+      <line x1="29" y1="26" x2="36" y2="19" stroke={color} strokeWidth="1.5" opacity="0.5"/>
+      {/* Text */}
+      <text x="50" y="23" fontFamily="'Libre Baskerville', serif" fontSize="18" fontWeight="700" fill="#e8e4f0" letterSpacing="-0.5">ealize</text>
+    </svg>
+  );
+}
+
+// ─── NAV ──────────────────────────────────────────────────────────────────────
+function Nav({ theme, tweaks, copy, lang, setLang }) {
+  const [scrolled, setScrolled] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  useEffect(() => {
+    const h = () => setScrolled(window.scrollY > 40);
+    window.addEventListener('scroll', h);
+    return () => window.removeEventListener('scroll', h);
+  }, []);
+
+  const linkStyle = {
+    color: 'rgba(232,228,240,0.65)',
+    textDecoration: 'none',
+    fontSize: 14,
+    fontWeight: 500,
+    letterSpacing: '0.01em',
+    transition: 'color 0.2s',
+    cursor: 'pointer',
+  };
+
+  const navLinks = [
+    { label: copy.nav.services, href: '#services' },
+    { label: copy.nav.howItWorks, href: '#how-it-works' },
+    { label: copy.nav.pricing, href: '#pricing' },
+    { label: copy.nav.contact, href: '#contact' },
+  ];
+
+  const langBtn = (code) => ({
+    background: lang === code ? `rgba(${theme.accentRgb},0.18)` : 'transparent',
+    color: lang === code ? '#f0ecff' : 'rgba(232,228,240,0.55)',
+    border: 'none',
+    padding: '4px 10px',
+    fontSize: 12,
+    fontWeight: 600,
+    letterSpacing: '0.06em',
+    borderRadius: 6,
+    cursor: 'pointer',
+    fontFamily: 'Inter',
+    transition: 'all 0.2s',
+  });
+
+  return (
+    <nav style={{
+      position: 'fixed', top: 0, left: 0, right: 0, zIndex: 100,
+      padding: '0 40px',
+      height: 64,
+      display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+      background: scrolled ? `rgba(8,7,18,0.6)` : 'transparent',
+      backdropFilter: scrolled ? 'blur(16px)' : 'none',
+      borderBottom: scrolled ? '1px solid rgba(255,255,255,0.06)' : '1px solid transparent',
+      transition: 'all 0.4s',
+    }}>
+      <EalizeLogo color={theme.badgeDot} size={28} />
+
+      <div style={{ display: 'flex', gap: 36, alignItems: 'center' }}>
+        {navLinks.map(l => (
+          <a key={l.href} href={l.href} style={linkStyle}
+            onMouseEnter={e => e.target.style.color = '#e8e4f0'}
+            onMouseLeave={e => e.target.style.color = 'rgba(232,228,240,0.65)'}
+          >{l.label}</a>
+        ))}
+
+        <div style={{
+          display: 'inline-flex', alignItems: 'center',
+          background: 'rgba(255,255,255,0.04)',
+          border: '1px solid rgba(255,255,255,0.08)',
+          borderRadius: 8,
+          padding: 2,
+          gap: 2,
+        }}>
+          <button onClick={() => setLang('en')} style={langBtn('en')} aria-label="English">EN</button>
+          <button onClick={() => setLang('fi')} style={langBtn('fi')} aria-label="Suomi">FI</button>
+        </div>
+
+        <a href="#contact" className="glass-btn-primary" style={{
+          color: '#fff',
+          padding: '8px 20px',
+          borderRadius: 8,
+          fontSize: 13,
+          fontWeight: 600,
+          textDecoration: 'none',
+          letterSpacing: '0.02em',
+          transition: 'transform 0.2s, box-shadow 0.3s',
+        }}
+          onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-1px)'}
+          onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}
+        >{copy.nav.getStarted}</a>
+      </div>
+    </nav>
+  );
+}
+
+// ─── CINEMATIC CANVAS BACKGROUND ────────────────────────────────────────────
+function VideoBackground() {
+  const canvasRef = useRef(null);
+  const stateRef = useRef(null);
+  const rafRef = useRef(null);
+  const scrollRef = useRef(0);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+    let W, H;
+
+    const resize = () => {
+      W = canvas.width = window.innerWidth;
+      H = canvas.height = window.innerHeight;
+    };
+    resize();
+    window.addEventListener('resize', resize);
+
+    // Particle system
+    const PARTICLE_COUNT = 50;
+    const NODE_COUNT = 10;
+
+    const particles = Array.from({ length: PARTICLE_COUNT }, () => ({
+      x: Math.random() * 1920,
+      y: Math.random() * 1080,
+      vx: (Math.random() - 0.5) * 0.4,
+      vy: (Math.random() - 0.5) * 0.4,
+      size: Math.random() * 1.8 + 0.3,
+      opacity: Math.random() * 0.6 + 0.1,
+      hue: 250 + Math.random() * 60, // purple to blue range
+      life: Math.random() * Math.PI * 2,
+      lifeSpeed: 0.008 + Math.random() * 0.012,
+    }));
+
+    const nodes = Array.from({ length: NODE_COUNT }, () => ({
+      x: Math.random() * 1920,
+      y: Math.random() * 1080,
+      vx: (Math.random() - 0.5) * 0.25,
+      vy: (Math.random() - 0.5) * 0.25,
+      r: Math.random() * 3 + 1.5,
+      pulse: Math.random() * Math.PI * 2,
+      pulseSpeed: 0.02 + Math.random() * 0.02,
+      hue: 260 + Math.random() * 40,
+    }));
+
+    // Aurora streams
+    const streams = Array.from({ length: 5 }, (_, i) => ({
+      points: Array.from({ length: 8 }, (_, j) => ({
+        x: (j / 7) * 1920,
+        y: 200 + i * 150 + Math.random() * 100,
+        oy: 200 + i * 150 + Math.random() * 100,
+        phase: Math.random() * Math.PI * 2,
+        speed: 0.003 + Math.random() * 0.004,
+        amp: 40 + Math.random() * 60,
+      })),
+      hue: 250 + i * 15,
+      opacity: 0.04 + Math.random() * 0.06,
+    }));
+
+    let t = 0;
+    let lastFrame = 0;
+    const FPS = 20;
+    const INTERVAL = 1000 / FPS;
+
+    const draw = (timestamp) => {
+      rafRef.current = requestAnimationFrame(draw);
+      if (timestamp - lastFrame < INTERVAL) return;
+      lastFrame = timestamp;
+      t += 0.008;
+      const scroll = scrollRef.current;
+      const totalScroll = Math.max(1, document.body.scrollHeight - window.innerHeight);
+      const scrollP = scroll / totalScroll;
+
+      ctx.clearRect(0, 0, W, H);
+
+      // Background gradient
+      const bg = ctx.createRadialGradient(W/2, H/2, 0, W/2, H/2, Math.max(W, H) * 0.8);
+      bg.addColorStop(0, `hsla(260, 60%, 8%, 1)`);
+      bg.addColorStop(0.5, `hsla(255, 70%, 5%, 1)`);
+      bg.addColorStop(1, `hsla(245, 80%, 2%, 1)`);
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, W, H);
+
+      // Scale everything to canvas
+      const scaleX = W / 1920;
+      const scaleY = H / 1080;
+
+      // Aurora streams
+      streams.forEach(stream => {
+        stream.points.forEach(p => {
+          p.phase += p.speed;
+          p.y = p.oy + Math.sin(p.phase) * p.amp;
+        });
+
+        ctx.beginPath();
+        const pts = stream.points;
+        ctx.moveTo(pts[0].x * scaleX, pts[0].y * scaleY);
+        for (let i = 1; i < pts.length - 1; i++) {
+          const mx = ((pts[i].x + pts[i+1].x) / 2) * scaleX;
+          const my = ((pts[i].y + pts[i+1].y) / 2) * scaleY;
+          ctx.quadraticCurveTo(pts[i].x * scaleX, pts[i].y * scaleY, mx, my);
+        }
+
+        const grad = ctx.createLinearGradient(0, 0, W, 0);
+        grad.addColorStop(0, `hsla(${stream.hue}, 80%, 60%, 0)`);
+        grad.addColorStop(0.3, `hsla(${stream.hue}, 80%, 65%, ${stream.opacity})`);
+        grad.addColorStop(0.7, `hsla(${stream.hue + 20}, 80%, 70%, ${stream.opacity})`);
+        grad.addColorStop(1, `hsla(${stream.hue + 30}, 80%, 60%, 0)`);
+
+        ctx.strokeStyle = grad;
+        ctx.lineWidth = 60 + Math.sin(t) * 20;
+        ctx.filter = 'blur(18px)';
+        ctx.stroke();
+        ctx.filter = 'none';
+      });
+
+      // Central glow orb — shifts subtly with scroll
+      const orbX = W * (0.5 + scrollP * 0.1 - 0.05);
+      const orbY = H * (0.45 - scrollP * 0.05);
+      const orbGrad = ctx.createRadialGradient(orbX, orbY, 0, orbX, orbY, W * 0.55);
+      orbGrad.addColorStop(0, `hsla(270, 80%, 65%, 0.18)`);
+      orbGrad.addColorStop(0.3, `hsla(265, 75%, 55%, 0.10)`);
+      orbGrad.addColorStop(0.6, `hsla(255, 70%, 45%, 0.04)`);
+      orbGrad.addColorStop(1, 'transparent');
+      ctx.fillStyle = orbGrad;
+      ctx.fillRect(0, 0, W, H);
+
+      // Secondary accent orb (bottom, shifts with scroll)
+      const orb2X = W * (0.7 + scrollP * 0.15);
+      const orb2Y = H * (0.8 + scrollP * 0.1);
+      const orb2Grad = ctx.createRadialGradient(orb2X, orb2Y, 0, orb2X, orb2Y, W * 0.35);
+      orb2Grad.addColorStop(0, `hsla(290, 70%, 60%, 0.12)`);
+      orb2Grad.addColorStop(1, 'transparent');
+      ctx.fillStyle = orb2Grad;
+      ctx.fillRect(0, 0, W, H);
+
+      // Node connections
+      nodes.forEach(n => {
+        n.x += n.vx; n.y += n.vy; n.pulse += n.pulseSpeed;
+        if (n.x < 0 || n.x > 1920) n.vx *= -1;
+        if (n.y < 0 || n.y > 1080) n.vy *= -1;
+      });
+
+      for (let i = 0; i < nodes.length; i++) {
+        for (let j = i + 1; j < nodes.length; j++) {
+          const dx = (nodes[i].x - nodes[j].x) * scaleX;
+          const dy = (nodes[i].y - nodes[j].y) * scaleY;
+          const dist = Math.sqrt(dx*dx + dy*dy);
+          const maxD = 220;
+          if (dist < maxD) {
+            const alpha = (1 - dist/maxD) * 0.3;
+            ctx.strokeStyle = `hsla(270, 80%, 70%, ${alpha})`;
+            ctx.lineWidth = (1 - dist/maxD) * 1.2;
+            ctx.beginPath();
+            ctx.moveTo(nodes[i].x * scaleX, nodes[i].y * scaleY);
+            ctx.lineTo(nodes[j].x * scaleX, nodes[j].y * scaleY);
+            ctx.stroke();
+          }
+        }
+      }
+
+      // Draw nodes with glow
+      nodes.forEach(n => {
+        const pulse = Math.sin(n.pulse) * 0.5 + 0.5;
+        const glow = ctx.createRadialGradient(n.x*scaleX, n.y*scaleY, 0, n.x*scaleX, n.y*scaleY, n.r*8);
+        glow.addColorStop(0, `hsla(${n.hue}, 80%, 70%, ${0.4 * pulse})`);
+        glow.addColorStop(1, 'transparent');
+        ctx.fillStyle = glow;
+        ctx.beginPath();
+        ctx.arc(n.x*scaleX, n.y*scaleY, n.r*8, 0, Math.PI*2);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc(n.x*scaleX, n.y*scaleY, n.r * (1 + pulse * 0.5), 0, Math.PI*2);
+        ctx.fillStyle = `hsla(${n.hue}, 90%, 80%, ${0.6 + pulse * 0.4})`;
+        ctx.fill();
+      });
+
+      // Particles
+      particles.forEach(p => {
+        p.x += p.vx; p.y += p.vy; p.life += p.lifeSpeed;
+        if (p.x < 0) p.x = 1920; if (p.x > 1920) p.x = 0;
+        if (p.y < 0) p.y = 1080; if (p.y > 1080) p.y = 0;
+        const alpha = (Math.sin(p.life) * 0.5 + 0.5) * p.opacity;
+        ctx.beginPath();
+        ctx.arc(p.x*scaleX, p.y*scaleY, p.size, 0, Math.PI*2);
+        ctx.fillStyle = `hsla(${p.hue}, 80%, 80%, ${alpha})`;
+        ctx.fill();
+      });
+
+      // Vignette
+      const vig = ctx.createRadialGradient(W/2, H/2, H*0.3, W/2, H/2, W*0.9);
+      vig.addColorStop(0, 'transparent');
+      vig.addColorStop(1, 'rgba(4,3,12,0.65)');
+      ctx.fillStyle = vig;
+      ctx.fillRect(0, 0, W, H);
+
+    };
+
+    rafRef.current = requestAnimationFrame(draw);
+
+    const onScroll = () => { scrollRef.current = window.scrollY; };
+    window.addEventListener('scroll', onScroll, { passive: true });
+
+    return () => {
+      cancelAnimationFrame(rafRef.current);
+      window.removeEventListener('resize', resize);
+      window.removeEventListener('scroll', onScroll);
+    };
+  }, []);
+
+  return (
+    <canvas ref={canvasRef} style={{
+      position: 'fixed', inset: 0, zIndex: 0, pointerEvents: 'none',
+      width: '100%', height: '100%',
+    }} />
+  );
+}
+
+// ─── HERO VIDEO (hero section only, autoplays once) ──────────────────────────
+function HeroVideo() {
+  return (
+    <div style={{ position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none', overflow: 'hidden' }}>
+      <video autoPlay muted playsInline loop preload="auto"
+        style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.45, mixBlendMode: 'screen' }}>
+        <source src="animation.mp4" type="video/mp4" />
+      </video>
+    </div>
+  );
+}
+
+// ─── HERO ─────────────────────────────────────────────────────────────────────
+function Hero({ theme, tweaks, copy, lang }) {
+  const [visible, setVisible] = useState(false);
+  useEffect(() => { setTimeout(() => setVisible(true), 100); }, []);
+
+  const t = (delay) => ({
+    opacity: visible ? 1 : 0,
+    transform: visible ? 'translateY(0)' : 'translateY(28px)',
+    transition: `opacity 0.9s ${delay}s, transform 0.9s ${delay}s`,
+  });
+
+  // EN mode lets the tweak panel override; FI uses native copy.
+  const headline = lang === 'en' ? (tweaks.heroHeadline || copy.hero.headline) : copy.hero.headline;
+  const ctaPrimaryLabel = lang === 'en' ? (tweaks.ctaLabel || copy.hero.ctaPrimary) : copy.hero.ctaPrimary;
+  const words = headline.split(' ');
+  const lastWord = words.pop();
+  const rest = words.join(' ');
+
+  return (
+    <section className="section" style={{
+      minHeight: '100vh',
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      position: 'relative', zIndex: 1,
+      textAlign: 'center',
+      padding: '140px 40px 100px',
+    }}>
+      <HeroVideo />
+      <div style={{ maxWidth: 860, width: '100%' }}>
+        <div style={{
+          ...t(0.1),
+          display: 'inline-flex', alignItems: 'center', gap: 8,
+          background: theme.badge, border: `1px solid ${theme.badgeBorder}`,
+          borderRadius: 100, padding: '6px 16px', marginBottom: 36,
+          fontSize: 12, fontWeight: 500, letterSpacing: '0.08em',
+          textTransform: 'uppercase', color: theme.badgeDot,
+        }}>
+          <span style={{ width: 6, height: 6, borderRadius: '50%', background: theme.badgeDot, display: 'inline-block', animation: 'pulse 2s infinite' }} />
+          {copy.hero.badge}
+        </div>
+
+        <h1 className="serif" style={{
+          ...t(0.25),
+          fontSize: 'clamp(48px, 7vw, 96px)',
+          fontWeight: 700, lineHeight: 1.05, letterSpacing: '-0.03em',
+          marginBottom: 24, color: '#f0ecff',
+        }}>
+          {rest}{' '}
+          <em style={{ color: theme.accentHex, fontStyle: 'italic' }}>{lastWord}</em>
+        </h1>
+
+        <p style={{
+          ...t(0.4),
+          fontSize: 18, color: 'rgba(232,228,240,0.6)',
+          maxWidth: 560, margin: '0 auto 48px', lineHeight: 1.7,
+        }}>
+          {copy.hero.subtitle}
+        </p>
+
+        <div style={{ ...t(0.55), display: 'flex', gap: 16, justifyContent: 'center', flexWrap: 'wrap' }}>
+          <a href="#contact" className="glass-btn-primary" style={{
+            color: '#fff',
+            padding: '15px 32px', borderRadius: 10, fontSize: 15, fontWeight: 600,
+            textDecoration: 'none', letterSpacing: '0.01em',
+            display: 'inline-flex', alignItems: 'center', gap: 8, transition: 'transform 0.2s, box-shadow 0.3s',
+          }}
+            onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-2px)'}
+            onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}
+          >{ctaPrimaryLabel} <span>→</span></a>
+          <a href="#how-it-works" className="glass-btn-secondary" style={{
+            color: '#e8e4f0',
+            padding: '15px 32px', borderRadius: 10, fontSize: 15, fontWeight: 500,
+            textDecoration: 'none',
+            transition: 'transform 0.2s, box-shadow 0.3s',
+          }}
+            onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-2px)'}
+            onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}
+          >{copy.hero.ctaSecondary}</a>
+        </div>
+
+        <div style={{
+          ...t(0.7),
+          display: 'flex', justifyContent: 'center',
+          marginTop: 72, borderTop: '1px solid rgba(255,255,255,0.07)', paddingTop: 40,
+        }}>
+          {copy.hero.stats.map((s, i) => (
+            <div key={i} style={{
+              flex: 1, textAlign: 'center', padding: '0 40px',
+              borderRight: i < 2 ? '1px solid rgba(255,255,255,0.07)' : 'none',
+            }}>
+              <div className="serif" style={{ fontSize: 34, fontWeight: 700, color: '#f0ecff', letterSpacing: '-0.02em' }}>{s.val}</div>
+              <div style={{ fontSize: 11, color: 'rgba(232,228,240,0.4)', marginTop: 6, letterSpacing: '0.05em', textTransform: 'uppercase' }}>{s.label}</div>
+            </div>
+          ))}
+        </div>
+
+        <div style={{
+          ...t(0.85),
+          display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8,
+          marginTop: 64, color: 'rgba(232,228,240,0.3)',
+          fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase',
+        }}>
+          <span>{copy.hero.scroll}</span>
+          <div style={{ width: 1, height: 48, background: 'linear-gradient(to bottom, rgba(232,228,240,0.3), transparent)', animation: 'scrollPulse 1.5s ease-in-out infinite' }} />
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ─── HOW IT WORKS ─────────────────────────────────────────────────────────────
+function HowItWorks({ theme, copy }) {
+  const steps = copy.process.steps;
+
+  return (
+    <section id="how-it-works" className="section" style={{
+      background: 'transparent',
+      backdropFilter: 'blur(0px)',
+      padding: '120px 80px',
+      position: 'relative', zIndex: 1,
+    }}>
+      <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+        <div style={{ marginBottom: 72, maxWidth: 520 }}>
+          <div style={{
+            fontSize: 11, fontWeight: 600, letterSpacing: '0.12em',
+            textTransform: 'uppercase', color: theme.badgeDot, marginBottom: 16,
+          }}>{copy.process.tag}</div>
+          <h2 className="serif" style={{ fontSize: 'clamp(32px, 4vw, 52px)', fontWeight: 700, lineHeight: 1.1, letterSpacing: '-0.02em', color: '#f0ecff' }}>
+            {copy.process.titleStart} <em style={{ color: theme.accentHex }}>{copy.process.titleEm}</em>
+          </h2>
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 1, background: 'rgba(255,255,255,0.05)' }}>
+          {steps.map((step, i) => (
+            <div key={i} style={{
+              background: theme.bgAlt,
+              padding: '48px 36px',
+              position: 'relative',
+              transition: 'background 0.3s',
+              cursor: 'default',
+            }}
+              onMouseEnter={e => e.currentTarget.style.background = `rgba(${theme.accentRgb},0.05)`}
+              onMouseLeave={e => e.currentTarget.style.background = theme.bgAlt}
+            >
+              <div style={{
+                fontSize: 11, fontWeight: 700, letterSpacing: '0.1em',
+                color: theme.accentHex, marginBottom: 20, fontFamily: 'Inter',
+              }}>{step.num}</div>
+              <h3 className="serif" style={{ fontSize: 22, fontWeight: 700, color: '#f0ecff', marginBottom: 14, lineHeight: 1.2 }}>{step.title}</h3>
+              <p style={{ fontSize: 14, lineHeight: 1.7, color: 'rgba(232,228,240,0.5)' }}>{step.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ─── SERVICE CARD ILLUSTRATIONS ─────────────────────────────────────────────
+function IllustrationWebApp() {
+  return (
+    <svg viewBox="0 0 300 200" fill="none" xmlns="http://www.w3.org/2000/svg" style={{width:'100%',height:'100%'}}>
+      <rect x="20" y="20" width="260" height="160" rx="10" fill="rgba(255,255,255,0.03)" stroke="rgba(108,60,225,0.2)" strokeWidth="1"/>
+      <rect x="20" y="20" width="260" height="32" rx="10" fill="rgba(108,60,225,0.08)"/>
+      <circle cx="38" cy="36" r="5" fill="rgba(255,100,100,0.4)"/>
+      <circle cx="54" cy="36" r="5" fill="rgba(255,200,50,0.4)"/>
+      <circle cx="70" cy="36" r="5" fill="rgba(50,220,100,0.4)"/>
+      <rect x="36" y="68" width="80" height="8" rx="4" fill="rgba(108,60,225,0.4)"/>
+      <rect x="36" y="84" width="120" height="5" rx="2.5" fill="rgba(255,255,255,0.1)"/>
+      <rect x="36" y="96" width="100" height="5" rx="2.5" fill="rgba(255,255,255,0.07)"/>
+      <rect x="36" y="116" width="60" height="22" rx="6" fill="rgba(108,60,225,0.5)" stroke="rgba(160,120,255,0.3)" strokeWidth="1"/>
+      <rect x="160" y="58" width="104" height="110" rx="8" fill="rgba(108,60,225,0.06)" stroke="rgba(108,60,225,0.15)" strokeWidth="1"/>
+      <rect x="172" y="70" width="80" height="50" rx="4" fill="rgba(108,60,225,0.12)"/>
+      <rect x="172" y="128" width="50" height="5" rx="2.5" fill="rgba(255,255,255,0.08)"/>
+      <rect x="172" y="140" width="70" height="5" rx="2.5" fill="rgba(255,255,255,0.05)"/>
+      <ellipse cx="150" cy="100" rx="80" ry="50" fill="rgba(108,60,225,0.04)"/>
+    </svg>
+  );
+}
+
+function IllustrationAI() {
+  const nodes = [[150,100],[90,60],[210,60],[60,110],[240,110],[90,150],[210,150]];
+  const edges = [[0,1],[0,2],[0,3],[0,4],[0,5],[0,6],[1,2],[3,5],[4,6]];
+  return (
+    <svg viewBox="0 0 300 200" fill="none" xmlns="http://www.w3.org/2000/svg" style={{width:'100%',height:'100%'}}>
+      <ellipse cx="150" cy="100" rx="90" ry="60" fill="rgba(108,60,225,0.06)"/>
+      {edges.map(([a,b],i) => (
+        <line key={i} x1={nodes[a][0]} y1={nodes[a][1]} x2={nodes[b][0]} y2={nodes[b][1]}
+          stroke="rgba(108,60,225,0.35)" strokeWidth="1.5" strokeDasharray="4 2"/>
+      ))}
+      {nodes.map(([x,y],i) => (
+        <g key={i}>
+          <circle cx={x} cy={y} r={i===0?14:8}
+            fill={i===0?"rgba(108,60,225,0.8)":"rgba(80,40,180,0.5)"}
+            stroke={i===0?"rgba(160,120,255,0.8)":"rgba(108,60,225,0.5)"} strokeWidth="1.5"/>
+          {i===0 && <circle cx={x} cy={y} r={22} fill="rgba(108,60,225,0.12)"/>}
+          {i===0 && <circle cx={x} cy={y} r={32} fill="rgba(108,60,225,0.05)"/>}
+        </g>
+      ))}
+      <rect x="55" y="25" width="40" height="14" rx="7" fill="rgba(108,60,225,0.2)" stroke="rgba(160,120,255,0.3)" strokeWidth="1"/>
+      <rect x="200" y="158" width="50" height="14" rx="7" fill="rgba(108,60,225,0.2)" stroke="rgba(160,120,255,0.3)" strokeWidth="1"/>
+    </svg>
+  );
+}
+
+function IllustrationSpeed() {
+  return (
+    <svg viewBox="0 0 300 200" fill="none" xmlns="http://www.w3.org/2000/svg" style={{width:'100%',height:'100%'}}>
+      <rect x="40" y="120" width="30" height="55" rx="4" fill="rgba(108,60,225,0.2)" stroke="rgba(108,60,225,0.3)" strokeWidth="1"/>
+      <rect x="82" y="95" width="30" height="80" rx="4" fill="rgba(108,60,225,0.3)" stroke="rgba(108,60,225,0.4)" strokeWidth="1"/>
+      <rect x="124" y="70" width="30" height="105" rx="4" fill="rgba(108,60,225,0.5)" stroke="rgba(108,60,225,0.6)" strokeWidth="1"/>
+      <rect x="166" y="40" width="30" height="135" rx="4" fill="rgba(108,60,225,0.75)" stroke="rgba(160,120,255,0.7)" strokeWidth="1"/>
+      <rect x="208" y="55" width="30" height="120" rx="4" fill="rgba(108,60,225,0.5)" stroke="rgba(108,60,225,0.6)" strokeWidth="1"/>
+      <polyline points="55,110 97,85 139,60 181,32 223,48" stroke="rgba(160,120,255,0.8)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+      <rect x="155" y="16" width="54" height="22" rx="11" fill="rgba(108,60,225,0.7)" stroke="rgba(160,120,255,0.5)" strokeWidth="1"/>
+      <text x="182" y="31" textAnchor="middle" fontSize="11" fill="white" fontFamily="Inter" fontWeight="600">+340%</text>
+      <ellipse cx="150" cy="178" rx="100" ry="10" fill="rgba(108,60,225,0.12)"/>
+    </svg>
+  );
+}
+
+function IllustrationDesign() {
+  return (
+    <svg viewBox="0 0 300 200" fill="none" xmlns="http://www.w3.org/2000/svg" style={{width:'100%',height:'100%'}}>
+      <rect x="95" y="15" width="110" height="170" rx="18" fill="rgba(255,255,255,0.03)" stroke="rgba(108,60,225,0.3)" strokeWidth="1.5"/>
+      <rect x="105" y="30" width="90" height="140" rx="8" fill="rgba(108,60,225,0.06)"/>
+      <rect x="115" y="38" width="30" height="4" rx="2" fill="rgba(255,255,255,0.12)"/>
+      <rect x="113" y="54" width="74" height="40" rx="6" fill="rgba(108,60,225,0.2)"/>
+      <rect x="113" y="100" width="74" height="6" rx="3" fill="rgba(255,255,255,0.12)"/>
+      <rect x="113" y="112" width="50" height="6" rx="3" fill="rgba(255,255,255,0.07)"/>
+      <rect x="113" y="130" width="40" height="16" rx="8" fill="rgba(108,60,225,0.5)" stroke="rgba(160,120,255,0.4)" strokeWidth="1"/>
+      <rect x="135" y="155" width="30" height="3" rx="1.5" fill="rgba(255,255,255,0.15)"/>
+      <circle cx="55" cy="70" r="22" fill="rgba(108,60,225,0.06)" stroke="rgba(108,60,225,0.2)" strokeWidth="1" strokeDasharray="4 3"/>
+      <circle cx="245" cy="130" r="18" fill="rgba(108,60,225,0.06)" stroke="rgba(108,60,225,0.2)" strokeWidth="1" strokeDasharray="4 3"/>
+      <ellipse cx="150" cy="188" rx="60" ry="8" fill="rgba(108,60,225,0.1)"/>
+    </svg>
+  );
+}
+
+function IllustrationAPI() {
+  return (
+    <svg viewBox="0 0 300 200" fill="none" xmlns="http://www.w3.org/2000/svg" style={{width:'100%',height:'100%'}}>
+      <rect x="110" y="75" width="80" height="50" rx="10" fill="rgba(108,60,225,0.2)" stroke="rgba(160,120,255,0.4)" strokeWidth="1.5"/>
+      <text x="150" y="105" textAnchor="middle" fontSize="12" fill="rgba(160,120,255,0.9)" fontFamily="Inter" fontWeight="700">API</text>
+      {[[40,50],[40,150],[260,50],[260,150]].map(([x,y],i) => (
+        <g key={i}>
+          <line x1={x<150?110:190} y1={100} x2={x} y2={y} stroke="rgba(108,60,225,0.4)" strokeWidth="1.5" strokeDasharray="6 3"/>
+          <rect x={x-22} y={y-14} width="44" height="28" rx="8" fill="rgba(108,60,225,0.12)" stroke="rgba(108,60,225,0.3)" strokeWidth="1"/>
+          <rect x={x-12} y={y-5} width="24" height="4" rx="2" fill="rgba(108,60,225,0.4)"/>
+          <rect x={x-12} y={y+3} width="16" height="3" rx="1.5" fill="rgba(255,255,255,0.1)"/>
+        </g>
+      ))}
+      <circle cx="75" cy="75" r="3" fill="rgba(160,120,255,0.8)"/>
+      <circle cx="225" cy="125" r="3" fill="rgba(160,120,255,0.8)"/>
+      <ellipse cx="150" cy="195" rx="70" ry="7" fill="rgba(108,60,225,0.1)"/>
+    </svg>
+  );
+}
+
+function IllustrationSupport() {
+  return (
+    <svg viewBox="0 0 300 200" fill="none" xmlns="http://www.w3.org/2000/svg" style={{width:'100%',height:'100%'}}>
+      <path d="M150 25 L210 55 L210 105 C210 140 150 175 150 175 C150 175 90 140 90 105 L90 55 Z" fill="rgba(108,60,225,0.12)" stroke="rgba(160,120,255,0.4)" strokeWidth="1.5"/>
+      <path d="M150 42 L195 65 L195 105 C195 130 150 158 150 158 C150 158 105 130 105 105 L105 65 Z" fill="rgba(108,60,225,0.15)"/>
+      <polyline points="125,100 143,118 178,82" stroke="rgba(160,120,255,0.9)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
+      <ellipse cx="150" cy="100" rx="75" ry="20" stroke="rgba(108,60,225,0.15)" strokeWidth="1" strokeDasharray="5 4" fill="none"/>
+      <circle cx="225" cy="100" r="4" fill="rgba(160,120,255,0.6)"/>
+      <ellipse cx="150" cy="192" rx="55" ry="7" fill="rgba(108,60,225,0.1)"/>
+    </svg>
+  );
+}
+
+// ─── FEATURES ────────────────────────────────────────────────────────────────
+function Features({ theme, copy }) {
+  const ILLUSTRATIONS = [IllustrationDesign, IllustrationWebApp, IllustrationAI, IllustrationSpeed, IllustrationAPI, IllustrationSupport];
+  const cards = copy.services.cards.map((c, i) => ({ ...c, Illustration: ILLUSTRATIONS[i] }));
+
+  const CARD_W = 260;
+  const CARD_COUNT = cards.length;
+  const ANGLE_STEP = 360 / CARD_COUNT;
+  const RADIUS = Math.round(CARD_W / (2 * Math.tan(Math.PI / CARD_COUNT))) + 80;
+
+  const rotRef = useRef(0);       // current displayed rotation
+  const targetRef = useRef(0);    // target rotation to animate toward
+  const rafRef = useRef(null);
+  const [rotation, setRotation] = useState(0);
+  const [activeIdx, setActiveIdx] = useState(0);
+  const sectionRef = useRef(null);
+
+  // Smooth animation loop — only runs when there's a difference to close
+  useEffect(() => {
+    const animate = () => {
+      const diff = targetRef.current - rotRef.current;
+      if (Math.abs(diff) > 0.05) {
+        rotRef.current += diff * 0.12; // eased step
+        setRotation(rotRef.current);
+        setActiveIdx(Math.round(rotRef.current / ANGLE_STEP) % CARD_COUNT);
+      } else {
+        rotRef.current = targetRef.current;
+        setRotation(targetRef.current);
+      }
+      rafRef.current = requestAnimationFrame(animate);
+    };
+    rafRef.current = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(rafRef.current);
+  }, []);
+
+  const navigate = (target) => {
+    const next = (target + CARD_COUNT) % CARD_COUNT;
+    // Pick shortest rotation direction
+    let delta = next * ANGLE_STEP - rotRef.current;
+    // Normalize to -180..180
+    while (delta > 180) delta -= 360;
+    while (delta < -180) delta += 360;
+    targetRef.current = rotRef.current + delta;
+    setActiveIdx(next);
+  };
+
+  const ServiceCard = ({ card, idx }) => {
+    const { Illustration, title, desc, tag } = card;
+    const angle = idx * ANGLE_STEP;
+    const cardRot = (rotation + angle) % 360;
+    const absAngle = Math.abs(((cardRot % 360) + 360) % 360);
+    const facing = absAngle > 180 ? 360 - absAngle : absAngle;
+    const isFront = facing < 40;
+    // Fixed: minimum opacity raised so no card disappears
+    const opacity = isFront ? 1 : facing < 90 ? 0.88 : 0.72;
+
+    return (
+      <div style={{
+        position: 'absolute',
+        width: CARD_W,
+        left: '50%',
+        top: '50%',
+        marginLeft: -CARD_W / 2,
+        marginTop: -210,
+        transform: `rotateY(${angle}deg) translateZ(${RADIUS}px)`,
+        borderRadius: 16,
+        border: `1px solid ${isFront ? 'rgba(160,120,255,0.45)' : 'rgba(255,255,255,0.06)'}`,
+        background: isFront ? 'rgba(108,60,225,0.09)' : 'rgba(255,255,255,0.02)',
+        backdropFilter: 'blur(20px)',
+        boxShadow: isFront ? '0 0 48px rgba(108,60,225,0.28), inset 0 1px 0 rgba(255,255,255,0.08)' : 'inset 0 1px 0 rgba(255,255,255,0.03)',
+        overflow: 'hidden',
+        opacity,
+        transition: 'border 0.4s, background 0.4s, box-shadow 0.4s, opacity 0.4s',
+        willChange: 'transform, opacity',
+        pointerEvents: isFront ? 'auto' : 'none',
+      }}>
+        {['tl','tr','bl','br'].map(c => (
+          <div key={c} style={{
+            position: 'absolute',
+            top: c.startsWith('t') ? 10 : 'auto', bottom: c.startsWith('b') ? 10 : 'auto',
+            left: c.endsWith('l') ? 10 : 'auto', right: c.endsWith('r') ? 10 : 'auto',
+            width: 10, height: 10,
+            borderTop: c.startsWith('t') ? '1.5px solid rgba(160,120,255,0.25)' : 'none',
+            borderBottom: c.startsWith('b') ? '1.5px solid rgba(160,120,255,0.25)' : 'none',
+            borderLeft: c.endsWith('l') ? '1.5px solid rgba(160,120,255,0.25)' : 'none',
+            borderRight: c.endsWith('r') ? '1.5px solid rgba(160,120,255,0.25)' : 'none',
+          }} />
+        ))}
+        <div style={{ height: 185, position: 'relative', overflow: 'hidden' }}>
+          <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 50% 80%, rgba(108,60,225,0.1) 0%, transparent 70%)', zIndex: 1 }} />
+          <div style={{ padding: '20px 24px 0', height: '100%' }}>
+            <Illustration />
+          </div>
+        </div>
+        <div style={{ height: 1, background: 'rgba(255,255,255,0.05)' }} />
+        <div style={{ padding: '18px 22px 22px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
+            <h3 style={{ fontSize: 14, fontWeight: 600, color: '#f0ecff', fontFamily: 'Inter', letterSpacing: '-0.01em', margin: 0 }}>{title}</h3>
+            <span style={{ fontSize: 9, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: theme.accentHex, background: `rgba(${theme.accentRgb},0.1)`, padding: '2px 8px', borderRadius: 100, whiteSpace: 'nowrap' }}>{tag}</span>
+          </div>
+          <p style={{ fontSize: 12.5, lineHeight: 1.65, color: 'rgba(232,228,240,0.45)', margin: 0 }}>{desc}</p>
+        </div>
+      </div>
+    );
+  };
+
+  const dotStyle = (i) => ({
+    width: i === activeIdx ? 20 : 6, height: 6, borderRadius: 3,
+    background: i === activeIdx ? theme.accentHex : 'rgba(255,255,255,0.2)',
+    transition: 'all 0.35s cubic-bezier(0.4,0,0.2,1)',
+    cursor: 'pointer', border: 'none', padding: 0,
+  });
+
+  const btnStyle = {
+    width: 40, height: 40, borderRadius: '50%',
+    border: '1px solid rgba(255,255,255,0.12)',
+    background: 'rgba(255,255,255,0.04)',
+    color: '#e8e4f0', fontSize: 18, cursor: 'pointer',
+    display: 'flex', alignItems: 'center', justifyContent: 'center',
+    transition: 'background 0.2s, border 0.2s',
+    backdropFilter: 'blur(8px)',
+  };
+
+  return (
+    <section ref={sectionRef} id="services" className="section" style={{
+      background: 'transparent', padding: '120px 0 100px',
+      position: 'relative', zIndex: 1,
+    }}>
+      <div style={{ textAlign: 'center', marginBottom: 64, padding: '0 80px' }}>
+        <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase', color: theme.badgeDot, marginBottom: 16 }}>{copy.services.tag}</div>
+        <h2 className="serif" style={{ fontSize: 'clamp(32px,4vw,52px)', fontWeight: 700, lineHeight: 1.1, letterSpacing: '-0.02em', color: '#f0ecff' }}>
+          {copy.services.titleStart}<br /><em style={{ color: theme.accentHex }}>{copy.services.titleEm}</em>
+        </h2>
+      </div>
+
+      {/* Main content: side nav + carousel */}
+      <div style={{ display: 'flex', alignItems: 'center', maxWidth: 1200, margin: '0 auto', padding: '0 40px', transform: 'translateX(-80px)' }}>
+
+        {/* Left side nav */}
+        <div style={{
+          display: 'flex', flexDirection: 'column', gap: 6,
+          width: 260, flexShrink: 0, zIndex: 20,
+        }}>
+          {/* Header above menu */}
+          <div style={{ marginBottom: 14, paddingLeft: 4 }}>
+            <div style={{ fontSize: 13, fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase', color: theme.badgeDot, marginBottom: 4 }}>{copy.services.sideHeader}</div>
+            <div style={{ width: 28, height: 1.5, background: theme.accentHex, borderRadius: 2, opacity: 0.5 }} />
+          </div>
+
+          {cards.map((card, i) => {
+            const isActive = i === activeIdx;
+            return (
+              <button key={card.title} onClick={() => navigate(i)}
+                style={{
+                  display: 'flex', alignItems: 'center', gap: 10,
+                  background: isActive ? `rgba(${theme.accentRgb},0.12)` : 'transparent',
+                  border: `1px solid ${isActive ? `rgba(${theme.accentRgb},0.35)` : 'rgba(255,255,255,0.06)'}`,
+                  borderRadius: 10, padding: '13px 18px',
+                  cursor: 'pointer', textAlign: 'left', width: '100%',
+                  transition: 'all 0.25s',
+                  backdropFilter: isActive ? 'blur(12px)' : 'none',
+                }}
+                onMouseEnter={e => { if (!isActive) { e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.12)'; }}}
+                onMouseLeave={e => { if (!isActive) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.06)'; }}}
+              >
+                {/* Active indicator bar */}
+                <div style={{
+                  width: 3, height: 28, borderRadius: 2, flexShrink: 0,
+                  background: isActive ? theme.accentHex : 'rgba(255,255,255,0.15)',
+                  transition: 'background 0.25s',
+                }} />
+                <div>
+                  <div style={{ fontSize: 15.5, fontWeight: isActive ? 600 : 400, color: isActive ? '#f0ecff' : 'rgba(232,228,240,0.55)', transition: 'color 0.25s', lineHeight: 1.3 }}>
+                    {card.title}
+                  </div>
+                  <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: isActive ? theme.accentHex : 'rgba(255,255,255,0.25)', marginTop: 3 }}>
+                    {card.tag}
+                  </div>
+                </div>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Carousel */}
+        <div style={{ flex: 1, position: 'relative', height: 480, perspective: 1100, perspectiveOrigin: '50% 42%' }}>
+          <div style={{ position: 'absolute', left: '50%', top: 0, width: 0, height: '100%',
+            transformStyle: 'preserve-3d', transform: `rotateY(${-rotation}deg)` }}>
+            {cards.map((card, i) => <ServiceCard key={card.title} card={card} idx={i} />)}
+          </div>
+        </div>
+      </div>
+
+      {/* Bottom controls */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 20, marginTop: 32 }}>
+        <button style={btnStyle} onClick={() => navigate(activeIdx - 1)}
+          onMouseEnter={e => { e.currentTarget.style.background = 'rgba(108,60,225,0.2)'; e.currentTarget.style.borderColor = 'rgba(160,120,255,0.4)'; }}
+          onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.12)'; }}
+        >‹</button>
+        <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+          {cards.map((_, i) => <button key={i} style={dotStyle(i)} onClick={() => navigate(i)} />)}
+        </div>
+        <button style={btnStyle} onClick={() => navigate(activeIdx + 1)}
+          onMouseEnter={e => { e.currentTarget.style.background = 'rgba(108,60,225,0.2)'; e.currentTarget.style.borderColor = 'rgba(160,120,255,0.4)'; }}
+          onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.12)'; }}
+        >›</button>
+      </div>
+    </section>
+  );
+}
+
+
+// ─── PRICING ──────────────────────────────────────────────────────────────────
+function Pricing({ theme, copy }) {
+  const plans = copy.pricing.plans.map((p, i) => ({ ...p, highlight: i === 1 }));
+
+  return (
+    <section id="pricing" className="section" style={{ background: 'transparent', padding: '120px 80px 0', position: 'relative', zIndex: 1 }}>
+      <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 300, background: 'linear-gradient(to top, #080712, transparent)', zIndex: 2, pointerEvents: 'none' }} />
+      <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+        <div style={{ textAlign: 'center', marginBottom: 72 }}>
+          <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase', color: theme.badgeDot, marginBottom: 16 }}>{copy.pricing.tag}</div>
+          <h2 className="serif" style={{ fontSize: 'clamp(32px, 4vw, 52px)', fontWeight: 700, letterSpacing: '-0.02em', color: '#f0ecff', lineHeight: 1.1 }}>
+            {copy.pricing.titleLine1}<br/><em style={{ color: theme.accentHex }}>{copy.pricing.titleEm}</em>
+          </h2>
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24 }}>
+          {plans.map((plan, i) => (
+            <div key={i} style={{
+              background: plan.highlight ? `rgba(${theme.accentRgb},0.08)` : theme.card,
+              border: `1px solid ${plan.highlight ? theme.accentHex : theme.cardBorder}`,
+              borderRadius: 16,
+              padding: '44px 36px',
+              position: 'relative',
+              transition: 'transform 0.3s',
+            }}
+              onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-4px)'}
+              onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}
+            >
+              {plan.highlight && (
+                <div style={{
+                  position: 'absolute', top: -12, left: '50%', transform: 'translateX(-50%)',
+                  background: theme.pricingHighlight,
+                  color: '#fff', fontSize: 11, fontWeight: 700, letterSpacing: '0.08em',
+                  textTransform: 'uppercase', padding: '4px 16px', borderRadius: 100,
+                }}>{copy.pricing.mostPopular}</div>
+              )}
+              <div style={{ fontSize: 12, fontWeight: 600, color: theme.badgeDot, letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 12 }}>{plan.name}</div>
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 8 }}>
+                <span className="serif" style={{ fontSize: 44, fontWeight: 700, color: '#f0ecff', letterSpacing: '-0.02em' }}>{plan.price}</span>
+                <span style={{ fontSize: 13, color: 'rgba(232,228,240,0.4)' }}>/ {plan.period}</span>
+              </div>
+              <p style={{ fontSize: 14, color: 'rgba(232,228,240,0.5)', lineHeight: 1.6, marginBottom: 32 }}>{plan.desc}</p>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 36 }}>
+                {plan.features.map((f, j) => (
+                  <div key={j} style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 14, color: 'rgba(232,228,240,0.75)' }}>
+                    <span style={{ width: 16, height: 16, borderRadius: '50%', background: `rgba(${theme.accentRgb},0.2)`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 9, color: theme.accentHex, flexShrink: 0 }}>✓</span>
+                    {f}
+                  </div>
+                ))}
+              </div>
+
+              <a href="#contact" style={{
+                display: 'block',
+                textAlign: 'center',
+                padding: '13px',
+                borderRadius: 8,
+                fontSize: 14,
+                fontWeight: 600,
+                textDecoration: 'none',
+                background: plan.highlight ? theme.pricingHighlight : 'transparent',
+                color: plan.highlight ? '#fff' : '#e8e4f0',
+                border: `1px solid ${plan.highlight ? 'transparent' : 'rgba(255,255,255,0.12)'}`,
+                transition: 'all 0.2s',
+              }}
+                onMouseEnter={e => { if (!plan.highlight) { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.3)'; } else { e.currentTarget.style.opacity = '0.85'; }}}
+                onMouseLeave={e => { e.currentTarget.style.borderColor = plan.highlight ? 'transparent' : 'rgba(255,255,255,0.12)'; e.currentTarget.style.opacity = '1'; }}
+              >
+                {plan.highlight ? '→ ' : ''}{plan.cta}
+              </a>
+            </div>
+          ))}
+        </div>
+
+        <p style={{ textAlign: 'center', marginTop: 40, fontSize: 13, color: 'rgba(232,228,240,0.35)' }}>
+          {copy.pricing.customLine} <a href="#contact" style={{ color: theme.badgeDot, textDecoration: 'none' }}>{copy.pricing.customCta}</a>
+        </p>
+      </div>
+    </section>
+  );
+}
+
+// ─── CTA / CONTACT ────────────────────────────────────────────────────────────
+function CTA({ theme, copy }) {
+  const [form, setForm] = useState({ name: '', email: '', message: '' });
+  const [sent, setSent] = useState(false);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setSent(true);
+  };
+
+  return (
+    <section id="contact" className="section" style={{
+      background: 'transparent',
+      padding: '120px 80px',
+      position: 'relative',
+      zIndex: 1,
+      overflow: 'hidden',
+    }}>
+      <div className="glow-orb" style={{ width: 700, height: 700, top: '50%', left: '50%', transform: 'translate(-50%,-50%)', background: theme.orb1, opacity: 0.5 }} />
+
+      <NodeCanvas nodeColor={theme.nodeColor} />
+
+      <div style={{ maxWidth: 640, margin: '0 auto', position: 'relative', zIndex: 1, textAlign: 'center' }}>
+        <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase', color: theme.badgeDot, marginBottom: 16 }}>{copy.contact.tag}</div>
+        <h2 className="serif" style={{ fontSize: 'clamp(36px, 5vw, 64px)', fontWeight: 700, lineHeight: 1.05, letterSpacing: '-0.03em', color: '#f0ecff', marginBottom: 20 }}>
+          {copy.contact.titleLine1}<br/><em style={{ color: theme.accentHex }}>{copy.contact.titleEm}</em>
+        </h2>
+        <p style={{ fontSize: 16, color: 'rgba(232,228,240,0.5)', marginBottom: 56, lineHeight: 1.65 }}>
+          {copy.contact.subtitle}
+        </p>
+
+        {sent ? (
+          <div style={{
+            background: `rgba(${theme.accentRgb},0.08)`,
+            border: `1px solid rgba(${theme.accentRgb},0.3)`,
+            borderRadius: 16,
+            padding: '48px',
+          }}>
+            <div style={{ fontSize: 32, marginBottom: 16 }}>✓</div>
+            <h3 className="serif" style={{ fontSize: 24, color: '#f0ecff', marginBottom: 8 }}>{copy.contact.successTitle}</h3>
+            <p style={{ fontSize: 14, color: 'rgba(232,228,240,0.5)' }}>{copy.contact.successDesc}</p>
+          </div>
+        ) : (
+          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 16, textAlign: 'left' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+              {['name', 'email'].map(field => (
+                <input key={field}
+                  type={field === 'email' ? 'email' : 'text'}
+                  placeholder={field === 'email' ? copy.contact.emailPh : copy.contact.namePh}
+                  value={form[field]}
+                  onChange={e => setForm(p => ({...p, [field]: e.target.value}))}
+                  required
+                  style={{
+                    background: 'rgba(255,255,255,0.04)',
+                    border: '1px solid rgba(255,255,255,0.09)',
+                    borderRadius: 10,
+                    padding: '14px 18px',
+                    fontSize: 14,
+                    color: '#e8e4f0',
+                    outline: 'none',
+                    fontFamily: 'Inter',
+                    transition: 'border-color 0.2s',
+                  }}
+                  onFocus={e => e.target.style.borderColor = `rgba(${theme.accentRgb},0.5)`}
+                  onBlur={e => e.target.style.borderColor = 'rgba(255,255,255,0.09)'}
+                />
+              ))}
+            </div>
+            <textarea
+              placeholder={copy.contact.messagePh}
+              value={form.message}
+              onChange={e => setForm(p => ({...p, message: e.target.value}))}
+              required
+              rows={5}
+              style={{
+                background: 'rgba(255,255,255,0.04)',
+                border: '1px solid rgba(255,255,255,0.09)',
+                borderRadius: 10,
+                padding: '14px 18px',
+                fontSize: 14,
+                color: '#e8e4f0',
+                outline: 'none',
+                fontFamily: 'Inter',
+                resize: 'vertical',
+                transition: 'border-color 0.2s',
+              }}
+              onFocus={e => e.target.style.borderColor = `rgba(${theme.accentRgb},0.5)`}
+              onBlur={e => e.target.style.borderColor = 'rgba(255,255,255,0.09)'}
+            />
+            <button type="submit" style={{
+              background: theme.ctaHex,
+              color: theme.ctaText,
+              padding: '15px',
+              borderRadius: 10,
+              fontSize: 15,
+              fontWeight: 600,
+              border: 'none',
+              cursor: 'pointer',
+              letterSpacing: '0.01em',
+              transition: 'opacity 0.2s, transform 0.2s',
+            }}
+              onMouseEnter={e => { e.currentTarget.style.opacity = '0.88'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
+              onMouseLeave={e => { e.currentTarget.style.opacity = '1'; e.currentTarget.style.transform = 'translateY(0)'; }}
+            >
+              {copy.contact.submit}
+            </button>
+          </form>
+        )}
+      </div>
+    </section>
+  );
+}
+
+// ─── FOOTER ───────────────────────────────────────────────────────────────────
+function Footer({ theme, copy }) {
+  return (
+    <footer style={{
+      background: 'rgba(8,7,18,0.55)',
+      zIndex: 1,
+      position: 'relative',
+      borderTop: '1px solid rgba(255,255,255,0.05)',
+      padding: '40px 80px',
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+      flexWrap: 'wrap', gap: 20,
+    }}>
+      <EalizeLogo color={theme.badgeDot} size={22} />
+      <div style={{ fontSize: 12, color: 'rgba(232,228,240,0.3)', letterSpacing: '0.02em' }}>
+        {copy.footer.copyright}
+      </div>
+      <div style={{ display: 'flex', gap: 24 }}>
+        {copy.footer.links.map(l => (
+          <a key={l} href="#" style={{ fontSize: 12, color: 'rgba(232,228,240,0.35)', textDecoration: 'none', transition: 'color 0.2s' }}
+            onMouseEnter={e => e.target.style.color = '#e8e4f0'}
+            onMouseLeave={e => e.target.style.color = 'rgba(232,228,240,0.35)'}
+          >{l}</a>
+        ))}
+      </div>
+    </footer>
+  );
+}
+
+// ─── APP ──────────────────────────────────────────────────────────────────────
+function App() {
+  const [tweaks, setTweak] = useTweaks(TWEAK_DEFAULTS);
+  const theme = THEMES[tweaks.theme] || THEMES.cosmic;
+
+  const [lang, setLangState] = useState(() => {
+    try {
+      const saved = localStorage.getItem('ealize-lang');
+      if (saved === 'en' || saved === 'fi') return saved;
+    } catch (e) {}
+    return (typeof navigator !== 'undefined' && navigator.language && navigator.language.toLowerCase().startsWith('fi')) ? 'fi' : 'en';
+  });
+  const setLang = (l) => {
+    setLangState(l);
+    try { localStorage.setItem('ealize-lang', l); } catch (e) {}
+  };
+  useEffect(() => {
+    document.documentElement.lang = lang;
+  }, [lang]);
+  const copy = COPY[lang] || COPY.en;
+
+  return (
+    <>
+      <style>{`
+        @keyframes pulse {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.3; }
+        }
+        @keyframes scrollPulse {
+          0%, 100% { opacity: 0.35; transform: scaleY(1); }
+          50% { opacity: 0.7; transform: scaleY(1.2); }
+        }
+        input::placeholder, textarea::placeholder { color: rgba(232,228,240,0.3); }
+        h1, h2, h3 { text-shadow: 0 2px 40px rgba(0,0,0,0.9), 0 0 80px rgba(0,0,0,0.6); }
+        .glass-btn-primary {
+          background: linear-gradient(135deg, rgba(108,60,225,0.9) 0%, rgba(80,30,200,0.95) 100%) !important;
+          border: 1px solid rgba(160,120,255,0.5) !important;
+          box-shadow: 0 0 24px rgba(108,60,225,0.55), 0 0 60px rgba(108,60,225,0.2), inset 0 1px 0 rgba(255,255,255,0.15) !important;
+          backdrop-filter: blur(12px);
+          position: relative; overflow: hidden;
+        }
+        .glass-btn-primary::before {
+          content: ''; position: absolute; inset: 0;
+          background: linear-gradient(135deg, rgba(255,255,255,0.12) 0%, transparent 60%);
+          pointer-events: none;
+        }
+        .glass-btn-primary:hover {
+          box-shadow: 0 0 36px rgba(108,60,225,0.8), 0 0 80px rgba(108,60,225,0.35), inset 0 1px 0 rgba(255,255,255,0.2) !important;
+        }
+        .glass-btn-secondary {
+          background: rgba(255,255,255,0.05) !important;
+          border: 1px solid rgba(255,255,255,0.18) !important;
+          box-shadow: 0 0 20px rgba(108,60,225,0.15), inset 0 1px 0 rgba(255,255,255,0.08) !important;
+          backdrop-filter: blur(16px);
+          position: relative; overflow: hidden;
+        }
+        .glass-btn-secondary::before {
+          content: ''; position: absolute; inset: 0;
+          background: linear-gradient(135deg, rgba(255,255,255,0.07) 0%, transparent 60%);
+          pointer-events: none;
+        }
+        .glass-btn-secondary:hover {
+          border-color: rgba(160,120,255,0.5) !important;
+          box-shadow: 0 0 28px rgba(108,60,225,0.25), inset 0 1px 0 rgba(255,255,255,0.12) !important;
+        }
+      `}</style>
+
+      <VideoBackground />
+      <Nav theme={theme} tweaks={tweaks} copy={copy} lang={lang} setLang={setLang} />
+      <Hero theme={theme} tweaks={tweaks} copy={copy} lang={lang} />
+
+      <HowItWorks theme={theme} copy={copy} />
+      <Features theme={theme} copy={copy} />
+      {tweaks.showPricing && <Pricing theme={theme} copy={copy} />}
+
+      {/* Video background on contact section only */}
+      <div style={{ position: 'relative', overflow: 'hidden' }}>
+        <video autoPlay muted playsInline loop preload="auto"
+          style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)', width: '100%', height: 'auto', zIndex: 0, opacity: 0.5, pointerEvents: 'none', willChange: 'transform' }}>
+          <source src="mp_.mp4" type="video/mp4" />
+        </video>
+        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 400, background: 'linear-gradient(to bottom, #080712 30%, transparent)', zIndex: 1, pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 120, background: 'linear-gradient(to top, #080712, transparent)', zIndex: 1, pointerEvents: 'none' }} />
+        <div style={{ position: 'relative', zIndex: 2 }}>
+          <CTA theme={theme} copy={copy} />
+        </div>
+      </div>
+
+      <Footer theme={theme} copy={copy} />
+
+      <TweaksPanel>
+        <TweakSection title="Visual Theme">
+          <TweakRadio id="theme" label="Style Variant" value={tweaks.theme} onChange={v => setTweak('theme', v)} options={[
+            { value: 'cosmic', label: 'Dark Cosmic' },
+            { value: 'editorial', label: 'Bold Editorial' },
+            { value: 'fire', label: 'Void + Fire' },
+          ]} />
+        </TweakSection>
+        <TweakSection title="Content">
+          <TweakText id="heroHeadline" label="Hero Headline" value={tweaks.heroHeadline} onChange={v => setTweak('heroHeadline', v)} />
+          <TweakText id="ctaLabel" label="CTA Button Label" value={tweaks.ctaLabel} onChange={v => setTweak('ctaLabel', v)} />
+          <TweakToggle id="showPricing" label="Show Pricing Section" value={tweaks.showPricing} onChange={v => setTweak('showPricing', v)} />
+        </TweakSection>
+      </TweaksPanel>
+    </>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>
