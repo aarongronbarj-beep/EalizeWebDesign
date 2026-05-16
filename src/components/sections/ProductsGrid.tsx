@@ -1,3 +1,4 @@
+import { Fragment } from 'react';
 import { Link } from 'react-router-dom';
 import {
   ArrowUpRight,
@@ -6,6 +7,33 @@ import {
   TrendingUp,
   Code2,
 } from 'lucide-react';
+
+function ServiceConnector({ flipped }: { flipped: boolean }) {
+  const startX = flipped ? 900 : 300;
+  const endX = flipped ? 300 : 900;
+  return (
+    <div className="hidden md:block" aria-hidden>
+      <svg
+        viewBox="0 0 1200 80"
+        className="mx-auto h-20 w-full"
+        fill="none"
+      >
+        <path
+          d={`M ${startX} 4 C ${startX} 40, ${endX} 40, ${endX} 76`}
+          stroke="#635BFF"
+          strokeOpacity="0.35"
+          strokeWidth="1.5"
+          strokeDasharray="4 7"
+          strokeLinecap="round"
+        />
+        <circle cx={startX} cy="4" r="5" fill="#635BFF" fillOpacity="0.85" />
+        <circle cx={startX} cy="4" r="10" fill="#635BFF" fillOpacity="0.15" />
+        <circle cx={endX} cy="76" r="5" fill="#635BFF" fillOpacity="0.85" />
+        <circle cx={endX} cy="76" r="10" fill="#635BFF" fillOpacity="0.15" />
+      </svg>
+    </div>
+  );
+}
 
 type Product = {
   icon: typeof BarChart3;
@@ -80,12 +108,13 @@ export default function ProductsGrid() {
           </p>
         </div>
 
-        <div className="mt-20 flex flex-col gap-20 md:gap-28">
+        <div className="mt-20 flex flex-col gap-20 md:gap-8">
           {products.map((product, index) => {
             const reverse = index % 2 === 1;
+            const isLast = index === products.length - 1;
             return (
+              <Fragment key={product.name}>
               <div
-                key={product.name}
                 className="grid items-center gap-10 md:grid-cols-2 md:gap-16"
               >
                 <div
@@ -94,7 +123,7 @@ export default function ProductsGrid() {
                   }`}
                 >
                   <div
-                    className={`relative aspect-[4/3] overflow-hidden rounded-3xl border border-line bg-gradient-to-br ${product.visualBg} shadow-card`}
+                    className={`relative aspect-[4/3] overflow-hidden rounded-3xl border border-line/70 bg-gradient-to-br ${product.visualBg} shadow-[0_30px_60px_-15px_rgba(15,15,15,0.18),0_15px_30px_-10px_rgba(15,15,15,0.1)] ring-1 ring-black/5 transition duration-300 hover:-translate-y-1 hover:shadow-[0_40px_80px_-20px_rgba(15,15,15,0.22),0_20px_40px_-12px_rgba(15,15,15,0.12)]`}
                   >
                     <div className="pointer-events-none absolute -right-10 -top-10 h-48 w-48 rounded-full bg-white/40 blur-3xl" />
                     <div className="pointer-events-none absolute -bottom-16 -left-10 h-56 w-56 rounded-full bg-white/30 blur-3xl" />
@@ -149,6 +178,8 @@ export default function ProductsGrid() {
                   </Link>
                 </div>
               </div>
+              {!isLast && <ServiceConnector flipped={reverse} />}
+              </Fragment>
             );
           })}
         </div>

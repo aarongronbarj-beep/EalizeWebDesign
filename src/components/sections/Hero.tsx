@@ -82,7 +82,7 @@ export default function Hero() {
             <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(99,91,255,0.08),_transparent_60%)]" />
 
             <img
-              src="/hero.png"
+              src="/herolanding.png"
               alt="Ealize AI products — business intelligence dashboard and automation"
               className="relative z-10 w-full max-w-[520px] rounded-3xl drop-shadow-[0_30px_60px_rgba(15,15,15,0.18)]"
             />
