@@ -1,0 +1,49 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: light;
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    @apply font-body text-ink bg-white antialiased;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-heading tracking-tight text-ink;
+  }
+}
+
+@layer components {
+  .container-content {
+    @apply mx-auto w-full max-w-content px-6 md:px-8;
+  }
+
+  .eyebrow {
+    @apply inline-flex items-center gap-2 rounded-pill border border-line bg-white/70 px-3 py-1 text-xs font-medium uppercase tracking-[0.12em] text-muted backdrop-blur;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-pill bg-ink px-6 py-3 text-sm font-semibold text-white shadow-pill transition hover:bg-ink-soft active:translate-y-px;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-pill border border-line bg-white px-6 py-3 text-sm font-semibold text-ink shadow-pill transition hover:bg-surface active:translate-y-px;
+  }
+
+  .btn-brand {
+    @apply inline-flex items-center justify-center gap-2 rounded-pill bg-brand px-6 py-3 text-sm font-semibold text-white shadow-pill transition hover:bg-brand-dark active:translate-y-px;
+  }
+}
