@@ -1,8 +1,6 @@
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 
-const tags = ['AI optimization', 'Business growth'];
-
 const stats = [
   { value: '4 products', sub: 'AI tools in development' },
   { value: '17 yrs', sub: 'Founders behind the build' },
@@ -15,42 +13,24 @@ export default function Hero() {
       <div className="container-content">
         <div className="grid items-center gap-12 md:grid-cols-[1.05fr_1fr] md:gap-10 lg:gap-16">
           <div>
-            <div className="flex flex-wrap items-center gap-2">
-              {tags.map((tag) => (
-                <span
-                  key={tag}
-                  className="inline-flex items-center gap-2 rounded-pill border border-line/80 bg-white/80 px-3 py-1 text-xs font-medium text-ink backdrop-blur"
-                >
-                  <span className="h-1.5 w-1.5 rounded-full bg-brand" />
-                  {tag}
-                </span>
-              ))}
-            </div>
-
-            <h1 className="mt-6 font-heading text-5xl font-bold leading-[1.05] tracking-tight text-ink md:text-6xl lg:text-[68px]">
-              Start your path{' '}
+            <h1 className="font-heading text-5xl font-bold leading-[1.05] tracking-tight text-ink md:text-6xl lg:text-[64px]">
+              Internal{' '}
               <span className="relative inline-block whitespace-nowrap text-brand">
-                <span className="relative z-10">to smarter*</span>
+                <span className="relative z-10">Business intelligence</span>
                 <span className="absolute -bottom-1 left-0 right-0 h-[3px] rounded-full bg-brand/60" />
-              </span>
-              <br />
-              business growth now!
+              </span>{' '}
+              optimized with AI
             </h1>
 
-            <div className="mt-8 flex items-center gap-4">
-              <div className="relative h-16 w-16 shrink-0">
-                <div className="absolute inset-0 rounded-full bg-gradient-to-br from-brand to-ink" />
-                <div className="absolute inset-1 rounded-full bg-white" />
-                <div className="absolute inset-2 rounded-full bg-gradient-to-br from-cream via-sky to-brand/30" />
-                <div className="absolute inset-0 flex items-center justify-center font-heading text-xs font-bold text-ink">
-                  AI
-                </div>
-              </div>
-              <p className="max-w-sm text-sm leading-relaxed text-muted">
-                Automate the busywork, integrate every tool you use, and grow
-                faster with AI built for real businesses.
-              </p>
-            </div>
+            <p className="mt-8 max-w-xl text-base leading-relaxed text-muted md:text-lg">
+              The average SaaS founder checks 6–8 different tools every
+              morning just to understand how yesterday went. By the time
+              you’ve pieced together a picture, it’s already out of
+              date.{' '}
+              <span className="font-semibold text-ink">
+                Ealize pulls everything together and tells you what it means.
+              </span>
+            </p>
 
             <div className="mt-8 flex flex-wrap items-center gap-3">
               <Link to="/contact" className="btn-primary">
