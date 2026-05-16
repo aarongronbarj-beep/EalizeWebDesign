@@ -2,6 +2,8 @@ import { Routes, Route } from 'react-router-dom';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import Home from '@/pages/Home';
+import About from '@/pages/About';
+import WhatWeFix from '@/pages/WhatWeFix';
 import Stub from '@/pages/Stub';
 
 export default function App() {
@@ -27,7 +29,8 @@ export default function App() {
             path="/products/development"
             element={<Stub title="App & Web Development" />}
           />
-          <Route path="/about" element={<Stub title="About Ealize" />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/what-we-fix" element={<WhatWeFix />} />
           <Route path="/contact" element={<Stub title="Get in touch" />} />
         </Routes>
       </main>
