@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pricing — Ealize Sites</title>
+  <meta name="description" content="Simple, transparent pricing. Basic from €120, Standard €249, Premium €449. No hidden fees.">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .pricing-page-hero { padding: 140px 2rem 60px; text-align: center; }
+    .pricing-page-hero h1 { font-family: 'Crimson Text', serif; font-size: clamp(2.5rem,5vw,3.8rem); font-weight:600; letter-spacing:-0.02em; line-height:1.1; margin-bottom:1rem; }
+    .pricing-page-hero h1 em { color:var(--orange); font-style:italic; }
+    .pricing-page-hero p { color:var(--muted); font-size:1.05rem; max-width:500px; margin:0 auto; line-height:1.7; }
+
+    .compare-section { max-width: 900px; margin: 0 auto; padding: 2rem 2rem 6rem; }
+    .compare-section h2 { font-family:'Crimson Text',serif; font-size:1.8rem; font-weight:600; margin-bottom:2rem; }
+    .compare-table { width:100%; border-collapse:collapse; }
+    .compare-table th { padding:0.75rem 1rem; text-align:left; font-size:0.75rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted); border-bottom:2px solid var(--border); }
+    .compare-table th:not(:first-child) { text-align:center; }
+    .compare-table td { padding:0.9rem 1rem; font-size:0.875rem; border-bottom:1px solid var(--border); vertical-align:middle; }
+    .compare-table td:not(:first-child) { text-align:center; }
+    .compare-table tr:last-child td { border-bottom:none; }
+    .compare-table .check { color:var(--orange); font-weight:700; font-size:1rem; }
+    .compare-table .dash { color:var(--border); font-size:1.1rem; }
+    .compare-table .col-featured { background:rgba(232,93,38,0.04); }
+    .compare-table th.col-featured { color:var(--orange); }
+    .faq-section { max-width:700px; margin:0 auto; padding:0 2rem 6rem; }
+    .faq-section h2 { font-family:'Crimson Text',serif; font-size:1.8rem; font-weight:600; margin-bottom:2rem; }
+    .faq-item { border-bottom:1px solid var(--border); padding:1.4rem 0; }
+    .faq-item h3 { font-size:0.95rem; font-weight:600; margin-bottom:0.5rem; }
+    .faq-item p { font-size:0.875rem; color:var(--muted); line-height:1.7; }
+    .roi-box { background:var(--charcoal); color:white; border-radius:20px; padding:2.5rem; max-width:700px; margin:0 auto 5rem; text-align:center; }
+    .roi-box h2 { font-family:'Crimson Text',serif; font-size:1.8rem; font-weight:600; margin-bottom:1rem; }
+    .roi-box p { color:rgba(255,255,255,0.6); font-size:0.95rem; line-height:1.7; margin-bottom:1.5rem; }
+    .roi-box strong { color:var(--orange-light); }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">Ealize<span>.</span></a>
+  <ul class="nav-links">
+    <li><a href="portfolio.html">Portfolio</a></li>
+    <li><a href="pricing.html">Pricing</a></li>
+    <li><a href="about.html">How It Works</a></li>
+    <li><a href="contact.html" class="nav-cta">Get a Quote</a></li>
+  </ul>
+  <button class="nav-hamburger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="pricing-page-hero">
+  <span class="section-label">Pricing</span>
+  <h1>Honest pricing.<br><em>No hidden surprises.</em></h1>
+  <p>Traditional agencies charge €3,000–€10,000 for the same result. We charge what it's actually worth for a small business.</p>
+</div>
+
+<!-- PRICING CARDS -->
+<section class="pricing-section" style="padding-top:0;">
+  <div class="pricing-grid">
+    <div class="pricing-card fade-up">
+      <div class="pricing-tier">Basic</div>
+      <div class="pricing-price"><sup>€</sup><span data-count="120">120</span></div>
+      <p class="pricing-desc">A clean, professional online presence. Ideal for businesses that just need to exist on the internet and be easy to contact.</p>
+      <ul class="pricing-features">
+        <li>Up to 3 pages (Home, About, Contact)</li>
+        <li>Custom design to your brand</li>
+        <li>Mobile-responsive</li>
+        <li>Contact form</li>
+        <li>Google Maps embed</li>
+        <li>SSL certificate setup</li>
+        <li>1 round of revisions</li>
+        <li class="no">Blog</li>
+        <li class="no">SEO setup</li>
+        <li class="no">Booking integration</li>
+        <li class="no">Analytics</li>
+      </ul>
+      <a href="contact.html" class="pricing-btn pricing-btn-secondary">Get Started</a>
+    </div>
+    <div class="pricing-card featured fade-up">
+      <div class="featured-badge">Most Popular</div>
+      <div class="pricing-tier">Standard</div>
+      <div class="pricing-price"><sup>€</sup><span data-count="249">249</span></div>
+      <p class="pricing-desc">More pages, a blog, and proper SEO foundations. This is what most local businesses actually need to start winning online.</p>
+      <ul class="pricing-features">
+        <li>Up to 6 pages</li>
+        <li>Custom design to your brand</li>
+        <li>Mobile-responsive</li>
+        <li>Contact form</li>
+        <li>Google Maps embed</li>
+        <li>SSL certificate setup</li>
+        <li>2 rounds of revisions</li>
+        <li>Blog (5 starter posts)</li>
+        <li>Basic SEO setup</li>
+        <li>Google Business Profile guide</li>
+        <li class="no">Booking integration</li>
+        <li class="no">Analytics dashboard</li>
+      </ul>
+      <a href="contact.html" class="pricing-btn pricing-btn-primary">Get Started</a>
+    </div>
+    <div class="pricing-card fade-up">
+      <div class="pricing-tier">Premium</div>
+      <div class="pricing-price"><sup>€</sup><span data-count="449">449</span></div>
+      <p class="pricing-desc">The complete package for businesses that are serious about growing online. Fast turnaround, all the features, full analytics.</p>
+      <ul class="pricing-features">
+        <li>Unlimited pages</li>
+        <li>Custom design to your brand</li>
+        <li>Mobile-responsive</li>
+        <li>Contact form</li>
+        <li>Google Maps embed</li>
+        <li>SSL certificate setup</li>
+        <li>Unlimited revisions</li>
+        <li>Blog (10 starter posts)</li>
+        <li>Full SEO setup + sitemap</li>
+        <li>Google Business Profile setup</li>
+        <li>Online booking integration</li>
+        <li>Google Analytics</li>
+        <li>Priority 10-day turnaround</li>
+      </ul>
+      <a href="contact.html" class="pricing-btn pricing-btn-secondary">Get Started</a>
+    </div>
+  </div>
+  <p class="pricing-note">Not sure which plan is right for you? <a href="contact.html" style="color:var(--orange);">Book a free 15-min call</a> and we'll tell you honestly.</p>
+</section>
+
+<!-- ROI BOX -->
+<div style="padding:0 2rem;">
+  <div class="roi-box fade-up">
+    <h2>Your website pays for itself.</h2>
+    <p>The Basic plan costs <strong>€120</strong>. If your average customer is worth €40 to you, you need just <strong>3 new customers</strong> to break even — and your website works 24/7, every day of the year.</p>
+    <a href="contact.html" class="btn-white" style="display:inline-block; background:var(--orange); color:white; padding:0.85rem 1.8rem; border-radius:8px; text-decoration:none; font-weight:700;">Let's talk →</a>
+  </div>
+</div>
+
+<!-- COMPARE TABLE -->
+<section class="compare-section">
+  <h2>Compare plans side by side</h2>
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th>Feature</th>
+        <th>Basic <br><small>€120</small></th>
+        <th class="col-featured">Standard <br><small>€249</small></th>
+        <th>Premium <br><small>€449</small></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Pages</td><td>Up to 3</td><td class="col-featured">Up to 6</td><td>Unlimited</td></tr>
+      <tr><td>Custom design</td><td class="check">✓</td><td class="col-featured check">✓</td><td class="check">✓</td></tr>
+      <tr><td>Mobile-responsive</td><td class="check">✓</td><td class="col-featured check">✓</td><td class="check">✓</td></tr>
+      <tr><td>Contact form</td><td class="check">✓</td><td class="col-featured check">✓</td><td class="check">✓</td></tr>
+      <tr><td>SSL certificate</td><td class="check">✓</td><td class="col-featured check">✓</td><td class="check">✓</td></tr>
+      <tr><td>Revisions</td><td>1 round</td><td class="col-featured">2 rounds</td><td>Unlimited</td></tr>
+      <tr><td>Blog</td><td class="dash">–</td><td class="col-featured check">✓ (5 posts)</td><td class="check">✓ (10 posts)</td></tr>
+      <tr><td>SEO setup</td><td class="dash">–</td><td class="col-featured">Basic</td><td>Full</td></tr>
+      <tr><td>Google Business guide</td><td class="dash">–</td><td class="col-featured check">✓</td><td class="check">✓</td></tr>
+      <tr><td>Booking integration</td><td class="dash">–</td><td class="col-featured dash">–</td><td class="check">✓</td></tr>
+      <tr><td>Analytics</td><td class="dash">–</td><td class="col-featured dash">–</td><td class="check">✓</td></tr>
+      <tr><td>Turnaround</td><td>2–3 weeks</td><td class="col-featured">2–3 weeks</td><td>10 days</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- FAQ -->
+<section class="faq-section">
+  <h2>Common questions</h2>
+  <div class="faq-item">
+    <h3>Are there monthly fees?</h3>
+    <p>No. You pay once for the build. Hosting is separate — we'll recommend a reliable host that costs €5–15/month, which you pay directly. We don't take a cut.</p>
+  </div>
+  <div class="faq-item">
+    <h3>What if I want changes after launch?</h3>
+    <p>Small tweaks are on us for the first 30 days. After that, we offer a simple hourly rate for any updates you need.</p>
+  </div>
+  <div class="faq-item">
+    <h3>Do I own my website?</h3>
+    <p>Yes. 100%. We build it, you own it. You can take it anywhere, host it anywhere, and we'll never hold it hostage.</p>
+  </div>
+  <div class="faq-item">
+    <h3>I don't have any photos or content — is that a problem?</h3>
+    <p>Not at all. We'll write the copy for you based on a short briefing call. For photos, we can use free professional stock images that match your business until you have your own.</p>
+  </div>
+  <div class="faq-item">
+    <h3>How do I pay?</h3>
+    <p>50% upfront to start, 50% when you approve the final design. Bank transfer or card — whatever is easier for you.</p>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-band">
+  <h2>Not sure which plan fits?</h2>
+  <p>Book a free 15-minute call. We'll listen to what you need and tell you honestly which option makes sense — even if it's the cheapest one.</p>
+  <a href="contact.html" class="btn-white">Book Your Free Call →</a>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <a href="index.html" class="footer-logo">Ealize<span>.</span></a>
+    <ul class="footer-links">
+      <li><a href="portfolio.html">Portfolio</a></li>
+      <li><a href="pricing.html">Pricing</a></li>
+      <li><a href="about.html">How It Works</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <span class="footer-copy">© 2025 Ealize Sites</span>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
+</body>
+</html>
