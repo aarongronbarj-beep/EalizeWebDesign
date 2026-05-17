@@ -4,6 +4,7 @@ import Footer from '@/components/layout/Footer';
 import Home from '@/pages/Home';
 import About from '@/pages/About';
 import WhatWeFix from '@/pages/WhatWeFix';
+import BusinessIntelligence from '@/pages/BusinessIntelligence';
 import Stub from '@/pages/Stub';
 
 export default function App() {
@@ -15,7 +16,7 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route
             path="/products/business-intelligence"
-            element={<Stub title="Business Intelligence" />}
+            element={<BusinessIntelligence />}
           />
           <Route
             path="/products/ad-creation"
