@@ -6,6 +6,8 @@ import Home from '@/pages/Home';
 import About from '@/pages/About';
 import WhatWeFix from '@/pages/WhatWeFix';
 import BusinessIntelligence from '@/pages/BusinessIntelligence';
+import Contact from '@/pages/Contact';
+import Pricing from '@/pages/Pricing';
 import Stub from '@/pages/Stub';
 
 export default function App() {
@@ -34,7 +36,8 @@ export default function App() {
           />
           <Route path="/about" element={<About />} />
           <Route path="/what-we-fix" element={<WhatWeFix />} />
-          <Route path="/contact" element={<Stub title="Get in touch" />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/pricing" element={<Pricing />} />
         </Routes>
       </main>
       <Footer />
