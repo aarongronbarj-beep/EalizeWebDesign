@@ -1,6 +1,7 @@
 import { Routes, Route } from 'react-router-dom';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
+import ScrollToHash from '@/components/ScrollToHash';
 import Home from '@/pages/Home';
 import About from '@/pages/About';
 import WhatWeFix from '@/pages/WhatWeFix';
@@ -10,6 +11,7 @@ import Stub from '@/pages/Stub';
 export default function App() {
   return (
     <div className="min-h-screen bg-white">
+      <ScrollToHash />
       <Navbar />
       <main>
         <Routes>

@@ -56,7 +56,7 @@ export default function Hero() {
             </div>
           </div>
 
-          <div className="relative flex items-start justify-center md:-mt-16 lg:-mt-24">
+          <div className="relative flex items-start justify-end md:-mt-16 lg:-mt-24">
             <div className="pointer-events-none absolute -left-10 top-10 h-48 w-48 rounded-full bg-cream/80 blur-3xl" />
             <div className="pointer-events-none absolute -right-10 bottom-10 h-56 w-56 rounded-full bg-sky/80 blur-3xl" />
             <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(99,91,255,0.08),_transparent_60%)]" />
@@ -64,7 +64,7 @@ export default function Hero() {
             <img
               src="/herolanding.png"
               alt="Ealize AI products — business intelligence dashboard and automation"
-              className="relative z-10 w-full max-w-[520px] rounded-3xl drop-shadow-[0_30px_60px_rgba(15,15,15,0.18)]"
+              className="relative z-10 w-full max-w-[420px] rounded-3xl drop-shadow-[0_30px_60px_rgba(15,15,15,0.18)] xl:max-w-[500px] 2xl:max-w-[580px]"
             />
           </div>
         </div>

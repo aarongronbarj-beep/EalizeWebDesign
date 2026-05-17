@@ -6,64 +6,105 @@ import {
   Plug,
   Sparkles,
   Zap,
+  TrendingUp,
+  Users,
+  Mail,
+  Megaphone,
+  BarChart3,
+  RefreshCw,
 } from 'lucide-react';
 
-type Integration = {
-  name: string;
-  shortLabel: string;
-  color: string;
-  textOnColor: 'white' | 'ink';
-  pulls: string;
-};
-
-const integrations: Integration[] = [
+const integrations = [
+  {
+    name: 'Gmail',
+    shortLabel: 'G',
+    color: '#EA4335',
+    textOnColor: 'white' as const,
+    status: 'Live',
+    pulls: 'Inbox triage, AI-extracted deadlines, action items, and vendor mentions — synced automatically.',
+  },
   {
     name: 'Stripe',
     shortLabel: 'S',
     color: '#635BFF',
-    textOnColor: 'white',
-    pulls:
-      'Payments, subscriptions, refunds and disputes — synced in real time.',
+    textOnColor: 'white' as const,
+    status: 'Live',
+    pulls: 'Payments, subscriptions, refunds and disputes — synced in real time.',
+  },
+  {
+    name: 'HubSpot',
+    shortLabel: 'H',
+    color: '#FF7A59',
+    textOnColor: 'white' as const,
+    status: 'Live',
+    pulls: 'Contacts, open deals, pipeline stages, and customer segments — always current.',
   },
   {
     name: 'QuickBooks',
     shortLabel: 'Qb',
     color: '#2CA01C',
-    textOnColor: 'white',
-    pulls:
-      'Invoices, expenses, and tax-categorized line items pulled into your ledger.',
+    textOnColor: 'white' as const,
+    status: 'Live',
+    pulls: 'Invoices, expenses, and tax-categorized line items pulled into your ledger.',
   },
   {
-    name: 'Xero',
-    shortLabel: 'X',
-    color: '#13B5EA',
-    textOnColor: 'white',
-    pulls:
-      'GL accounts, bank reconciliation, and financial reports — always reconciled.',
+    name: 'Google Ads',
+    shortLabel: 'GA',
+    color: '#4285F4',
+    textOnColor: 'white' as const,
+    status: 'Soon',
+    pulls: 'Ad spend, conversions, ROAS, and keyword performance — all in one place.',
   },
   {
-    name: 'PayPal',
-    shortLabel: 'P',
-    color: '#003087',
-    textOnColor: 'white',
-    pulls:
-      'Transactions, disputes and payout history merged with the rest of your revenue.',
+    name: 'Meta Ads',
+    shortLabel: 'M',
+    color: '#0866FF',
+    textOnColor: 'white' as const,
+    status: 'Soon',
+    pulls: 'Facebook and Instagram metrics, audience insights, and cost-per-result tracking.',
+  },
+];
+
+const modules = [
+  {
+    icon: TrendingUp,
+    eyebrow: 'Revenue',
+    title: 'Know your real numbers.',
+    body: 'MRR, ARR, and churn rate tracked live from Stripe. Revenue broken down by product, customer segment, and stream — with sparklines on every metric so you see the trend at a glance.',
+    stats: [
+      { label: 'MRR', value: '$28,077', delta: '+3.2%', up: true },
+      { label: 'ARR', value: '$336,924', delta: '+15.4%', up: true },
+      { label: 'Churn Rate', value: '2.1%', delta: '−14.3%', up: true },
+    ],
   },
   {
-    name: 'Square',
-    shortLabel: 'Sq',
-    color: '#0F0F0F',
-    textOnColor: 'white',
-    pulls:
-      'In-person sales, terminal payments and refunds — unified with online revenue.',
+    icon: Users,
+    eyebrow: 'Customers',
+    title: 'Your full pipeline, one screen.',
+    body: 'HubSpot contacts and deals pulled into a live kanban — Lead, Qualified, Proposal, Negotiation, Closed Won. See total pipeline value, days in stage, and which accounts are at risk.',
+    stats: [
+      { label: 'Contacts', value: '614', delta: '+7.4%', up: true },
+      { label: 'Open Deals', value: '35', delta: '+12.9%', up: true },
+      { label: 'Pipeline', value: '$326,500', delta: '+9.1%', up: true },
+    ],
   },
   {
-    name: 'Chargebee',
-    shortLabel: 'Cb',
-    color: '#FF7846',
-    textOnColor: 'white',
-    pulls:
-      'Recurring billing, dunning workflows, and plan changes tracked end-to-end.',
+    icon: Mail,
+    eyebrow: 'AI Inbox',
+    title: 'Your inbox, already triaged.',
+    body: 'Gmail syncs every few minutes. Ealize reads each message and extracts deadlines, action items, and vendor mentions — so your most important emails are never buried.',
+    bullets: [
+      'Deadlines pulled from email bodies, with one-click calendar add',
+      'Action items surfaced as checkboxes — mark done without leaving Ealize',
+      'Categories: Finance, Legal, Urgent, Deadlines, Customer',
+    ],
+  },
+  {
+    icon: Megaphone,
+    eyebrow: 'Marketing',
+    title: 'Ad spend meets revenue.',
+    body: 'Google Ads and Meta Ads land soon. When they do, you will see spend, conversions, ROAS, and cost-per-result alongside your Stripe revenue — so attribution is never a guess.',
+    comingSoon: true,
   },
 ];
 
@@ -79,6 +120,11 @@ const trustPoints = [
     body: 'Ealize never moves money or modifies your records. We only ever read.',
   },
   {
+    icon: RefreshCw,
+    title: 'Syncs every few minutes',
+    body: 'Data refreshes automatically in the background. Your dashboard is always current.',
+  },
+  {
     icon: CheckCircle2,
     title: 'Encrypted end-to-end',
     body: 'Tokens are scoped, rotated, and encrypted at rest. SOC 2 in progress.',
@@ -88,158 +134,248 @@ const trustPoints = [
 export default function BusinessIntelligence() {
   return (
     <>
-      <section className="relative overflow-hidden bg-hero-gradient pt-32 pb-16 md:pt-36 md:pb-24">
+      {/* Hero */}
+      <section className="relative overflow-hidden bg-hero-gradient pt-28 pb-14 md:pt-32 md:pb-20 xl:pt-40 xl:pb-28 2xl:pt-48 2xl:pb-36">
         <div className="container-content">
-          <div className="grid items-center gap-12 md:grid-cols-[1.05fr_1fr] md:gap-10 lg:gap-16">
+          <div className="grid items-center gap-10 md:grid-cols-[1.1fr_1fr] md:gap-10 lg:gap-16 xl:grid-cols-[1fr_1fr] xl:gap-20 2xl:gap-28">
             <div>
               <span className="eyebrow">01 · Product</span>
-              <h1 className="mt-6 font-heading text-5xl font-bold leading-[1.05] tracking-tight text-ink md:text-6xl lg:text-[64px]">
+              <h1 className="mt-5 font-heading text-4xl font-bold leading-[1.05] tracking-tight text-ink sm:text-5xl md:text-6xl lg:text-[64px] xl:text-[72px] 2xl:text-[88px]">
                 Business{' '}
                 <span className="relative inline-block whitespace-nowrap text-brand">
                   <span className="relative z-10">Intelligence</span>
                   <span className="absolute -bottom-1 left-0 right-0 h-[3px] rounded-full bg-brand/60" />
                 </span>
               </h1>
-              <p className="mt-8 max-w-xl text-base leading-relaxed text-muted md:text-lg">
-                One dashboard for everything you bill, charge, and refund. Stop
-                reconciling six different tools — Ealize stitches your payments
-                stack into a single source of truth.
+              <p className="mt-6 text-base leading-relaxed text-muted sm:mt-8 md:text-lg xl:text-xl xl:leading-relaxed 2xl:text-2xl">
+                Revenue, customers, inbox, and marketing — one dashboard, always in sync.
+                Connect Gmail, Stripe, and HubSpot in minutes and stop switching tabs to understand your business.
               </p>
 
-              <div className="mt-8 flex flex-wrap items-center gap-3">
-                <Link to="/contact" className="btn-primary">
+              <div className="mt-6 flex flex-col gap-3 sm:mt-8 sm:flex-row sm:flex-wrap sm:items-center">
+                <Link to="/contact" className="btn-primary xl:px-8 xl:py-4 xl:text-base">
                   Book a demo
-                  <ArrowRight className="h-4 w-4" />
+                  <ArrowRight className="h-4 w-4 xl:h-5 xl:w-5" />
                 </Link>
-                <a href="#integrations" className="btn-secondary">
+                <a href="#integrations" className="btn-secondary xl:px-8 xl:py-4 xl:text-base">
                   See connected sources
                 </a>
               </div>
             </div>
 
-            <div className="relative flex items-start justify-center md:-mt-16 lg:-mt-24">
-              <div className="pointer-events-none absolute -left-10 top-10 h-48 w-48 rounded-full bg-cream/80 blur-3xl" />
-              <div className="pointer-events-none absolute -right-10 bottom-10 h-56 w-56 rounded-full bg-sky/80 blur-3xl" />
+            <div className="relative flex items-center justify-center md:-mt-10 lg:-mt-16 xl:-mt-20">
+              <div className="pointer-events-none absolute -left-10 top-10 h-48 w-48 rounded-full bg-cream/80 blur-3xl xl:h-72 xl:w-72" />
+              <div className="pointer-events-none absolute -right-10 bottom-10 h-56 w-56 rounded-full bg-sky/80 blur-3xl xl:h-80 xl:w-80" />
               <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(99,91,255,0.08),_transparent_60%)]" />
-
               <img
                 src="/dashboardpage.png"
-                alt="Ealize Business Intelligence dashboard preview"
-                className="relative z-10 w-full max-w-[520px] rounded-3xl drop-shadow-[0_30px_60px_rgba(15,15,15,0.18)]"
+                alt="Ealize Business Intelligence dashboard"
+                className="relative z-10 w-full max-w-[480px] rounded-2xl drop-shadow-[0_30px_60px_rgba(15,15,15,0.18)] md:max-w-full xl:rounded-3xl"
               />
             </div>
           </div>
         </div>
       </section>
 
-      <section id="integrations" className="bg-surface py-24 md:py-32">
+      {/* Module showcase */}
+      <section className="bg-white py-20 md:py-28 xl:py-36 2xl:py-44">
         <div className="container-content">
-          <div className="mx-auto max-w-2xl text-center">
+          <div className="mx-auto max-w-2xl text-center xl:max-w-3xl">
             <span className="eyebrow">
-              <Plug className="h-3.5 w-3.5" />
-              Connected sources
+              <BarChart3 className="h-3.5 w-3.5" />
+              What's inside
             </span>
-            <h2 className="mt-5 font-heading text-4xl font-bold tracking-tight md:text-5xl">
-              All your billing tools, one view.
+            <h2 className="mt-5 font-heading text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl xl:text-6xl">
+              Four views. Everything covered.
             </h2>
-            <p className="mt-4 text-base leading-relaxed text-muted md:text-lg">
-              Plug in once. Ealize handles the rest — pulling, normalizing and
-              reconciling your revenue every few minutes.
+            <p className="mt-4 text-base leading-relaxed text-muted md:text-lg xl:text-xl">
+              Each module pulls from a dedicated integration and stays in sync automatically.
             </p>
           </div>
 
-          <div className="mt-16 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {integrations.map((integration) => (
-              <article
-                key={integration.name}
-                className="group relative overflow-hidden rounded-2xl border border-line bg-white p-6 shadow-card transition hover:-translate-y-0.5 hover:shadow-hero"
-              >
-                <div className="flex items-center gap-4">
-                  <div
-                    className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl font-heading text-base font-bold shadow-sm"
-                    style={{
-                      backgroundColor: integration.color,
-                      color:
-                        integration.textOnColor === 'white' ? '#FFFFFF' : '#0F0F0F',
-                    }}
-                  >
-                    {integration.shortLabel}
-                  </div>
-                  <div className="min-w-0">
-                    <h3 className="font-heading text-lg font-bold tracking-tight text-ink">
-                      {integration.name}
-                    </h3>
-                    <span className="mt-0.5 inline-flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-widest text-emerald-600">
-                      <span className="inline-block h-1.5 w-1.5 rounded-full bg-emerald-500" />
-                      Live
-                    </span>
-                  </div>
-                </div>
-                <p className="mt-5 text-sm leading-relaxed text-muted">
-                  {integration.pulls}
-                </p>
-              </article>
-            ))}
-          </div>
-
-          <p className="mx-auto mt-10 max-w-xl text-center text-sm text-muted">
-            More sources land monthly. Need something specific?{' '}
-            <Link to="/contact" className="font-semibold text-ink underline-offset-4 hover:underline">
-              Tell us
-            </Link>
-            .
-          </p>
-        </div>
-      </section>
-
-      <section className="bg-white py-24 md:py-28">
-        <div className="container-content">
-          <div className="mx-auto max-w-2xl text-center">
-            <span className="eyebrow">
-              <Sparkles className="h-3.5 w-3.5" />
-              How sync works
-            </span>
-            <h2 className="mt-5 font-heading text-3xl font-bold tracking-tight md:text-4xl">
-              Set it up once. Forget it forever.
-            </h2>
-          </div>
-
-          <div className="mt-14 grid gap-6 md:grid-cols-3">
-            {trustPoints.map((point) => (
+          <div className="mt-12 grid gap-5 sm:grid-cols-2 md:mt-16 xl:grid-cols-4 xl:gap-6 2xl:gap-8">
+            {modules.map((mod) => (
               <div
-                key={point.title}
-                className="rounded-2xl border border-line bg-surface p-6"
+                key={mod.eyebrow}
+                className="relative rounded-2xl border border-line bg-surface p-6 xl:p-8 2xl:p-10"
               >
-                <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-white text-brand shadow-sm">
-                  <point.icon className="h-5 w-5" />
+                {mod.comingSoon && (
+                  <span className="absolute top-5 right-5 rounded-full bg-amber-100 px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-widest text-amber-700">
+                    Coming soon
+                  </span>
+                )}
+                <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-white text-brand shadow-sm xl:h-12 xl:w-12">
+                  <mod.icon className="h-5 w-5 xl:h-6 xl:w-6" />
                 </span>
-                <h3 className="mt-5 font-heading text-lg font-bold tracking-tight text-ink">
-                  {point.title}
-                </h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted">
-                  {point.body}
+                <p className="mt-4 font-mono text-[10px] uppercase tracking-widest text-brand">
+                  {mod.eyebrow}
                 </p>
+                <h3 className="mt-1 font-heading text-lg font-bold tracking-tight text-ink xl:text-xl">
+                  {mod.title}
+                </h3>
+                <p className="mt-3 text-sm leading-relaxed text-muted xl:text-base">{mod.body}</p>
+
+                {mod.stats && (
+                  <div className="mt-5 grid grid-cols-3 gap-2 xl:gap-3">
+                    {mod.stats.map((s) => (
+                      <div key={s.label} className="min-w-0 rounded-xl border border-line bg-white p-2.5 xl:p-3">
+                        <p className="truncate font-mono text-[9px] uppercase tracking-widest text-muted xl:text-[10px]">
+                          {s.label}
+                        </p>
+                        <p className="mt-1 truncate font-heading text-sm font-bold text-ink xl:text-base">{s.value}</p>
+                        <p className={`mt-0.5 text-xs font-medium ${s.up ? 'text-emerald-600' : 'text-red-500'}`}>
+                          {s.delta}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {mod.bullets && (
+                  <ul className="mt-5 space-y-2">
+                    {mod.bullets.map((b) => (
+                      <li key={b} className="flex items-start gap-2 text-sm text-muted xl:text-base">
+                        <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-500" />
+                        {b}
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="bg-hero-gradient py-20 md:py-24">
+      {/* Integrations */}
+      <section id="integrations" className="bg-surface py-20 md:py-28 xl:py-36 2xl:py-44">
+        <div className="container-content">
+          <div className="flex flex-col gap-12 lg:flex-row lg:items-center lg:gap-16 xl:gap-24 2xl:gap-32">
+            {/* Left */}
+            <div className="flex-1">
+              <span className="eyebrow">
+                <Plug className="h-3.5 w-3.5" />
+                Connected sources
+              </span>
+              <h2 className="mt-5 font-heading text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl xl:text-6xl">
+                All your tools, one view.
+              </h2>
+              <p className="mt-4 text-base leading-relaxed text-muted md:text-lg xl:text-xl">
+                Plug in once. Ealize handles the rest — pulling, normalizing and
+                reconciling your data every few minutes.
+              </p>
+
+              <div className="mt-8 grid gap-3 sm:grid-cols-2 xl:gap-4">
+                {integrations.map((integration) => (
+                  <article
+                    key={integration.name}
+                    className="group relative overflow-hidden rounded-2xl border border-line bg-white p-4 shadow-card transition hover:-translate-y-0.5 hover:shadow-hero xl:p-5"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div
+                        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl font-heading text-sm font-bold shadow-sm xl:h-12 xl:w-12 xl:text-base"
+                        style={{
+                          backgroundColor: integration.color,
+                          color: integration.textOnColor === 'white' ? '#FFFFFF' : '#0F0F0F',
+                        }}
+                      >
+                        {integration.shortLabel}
+                      </div>
+                      <div className="min-w-0">
+                        <h3 className="font-heading text-base font-bold tracking-tight text-ink xl:text-lg">
+                          {integration.name}
+                        </h3>
+                        {integration.status === 'Live' ? (
+                          <span className="mt-0.5 inline-flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-widest text-emerald-600">
+                            <span className="inline-block h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                            Live
+                          </span>
+                        ) : (
+                          <span className="mt-0.5 inline-flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-widest text-amber-600">
+                            <span className="inline-block h-1.5 w-1.5 rounded-full bg-amber-400" />
+                            Coming soon
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    <p className="mt-3 text-xs leading-relaxed text-muted xl:text-sm">
+                      {integration.pulls}
+                    </p>
+                  </article>
+                ))}
+              </div>
+
+              <p className="mt-6 text-sm text-muted xl:mt-8 xl:text-base">
+                More sources land monthly. Need something specific?{' '}
+                <Link to="/contact" className="font-semibold text-ink underline-offset-4 hover:underline">
+                  Tell us
+                </Link>
+                .
+              </p>
+            </div>
+
+            {/* Right: dashboard screenshot */}
+            <div className="relative flex flex-1 items-center justify-center">
+              <div className="pointer-events-none absolute -left-10 top-10 h-48 w-48 rounded-full bg-cream/80 blur-3xl xl:h-72 xl:w-72" />
+              <div className="pointer-events-none absolute -right-10 bottom-10 h-56 w-56 rounded-full bg-sky/80 blur-3xl xl:h-80 xl:w-80" />
+              <img
+                src="/latest-dashboard.png"
+                alt="Ealize integration dashboard"
+                className="relative z-10 w-full rounded-2xl drop-shadow-[0_30px_60px_rgba(15,15,15,0.18)] xl:rounded-3xl"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Trust */}
+      <section className="bg-white py-20 md:py-24 xl:py-32 2xl:py-40">
+        <div className="container-content">
+          <div className="mx-auto max-w-2xl text-center xl:max-w-3xl">
+            <span className="eyebrow">
+              <Sparkles className="h-3.5 w-3.5" />
+              How sync works
+            </span>
+            <h2 className="mt-5 font-heading text-3xl font-bold tracking-tight md:text-4xl xl:text-5xl">
+              Set it up once. Forget it forever.
+            </h2>
+          </div>
+
+          <div className="mt-12 grid gap-5 sm:grid-cols-2 md:mt-14 md:grid-cols-4 xl:gap-6 2xl:gap-8">
+            {trustPoints.map((point) => (
+              <div
+                key={point.title}
+                className="rounded-2xl border border-line bg-surface p-6 xl:p-8 2xl:p-10"
+              >
+                <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-white text-brand shadow-sm xl:h-12 xl:w-12">
+                  <point.icon className="h-5 w-5 xl:h-6 xl:w-6" />
+                </span>
+                <h3 className="mt-5 font-heading text-lg font-bold tracking-tight text-ink xl:text-xl">
+                  {point.title}
+                </h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted xl:text-base">{point.body}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="bg-hero-gradient py-16 md:py-20 xl:py-28 2xl:py-36">
         <div className="container-content text-center">
-          <h2 className="mx-auto max-w-2xl font-heading text-4xl font-bold leading-tight tracking-tight text-ink md:text-5xl">
+          <h2 className="mx-auto max-w-2xl font-heading text-3xl font-bold leading-tight tracking-tight text-ink sm:text-4xl md:text-5xl xl:max-w-4xl xl:text-6xl 2xl:text-7xl">
             Ready to see your real numbers?
           </h2>
-          <p className="mx-auto mt-5 max-w-xl text-base text-muted md:text-lg">
+          <p className="mx-auto mt-5 max-w-xl text-base text-muted md:text-lg xl:max-w-2xl xl:text-xl 2xl:text-2xl">
             Book a 20-minute call. We&apos;ll connect a sandbox to your stack
             and show you what your data looks like, unified.
           </p>
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-            <Link to="/contact" className="btn-primary">
+          <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center xl:mt-10 xl:gap-4">
+            <Link to="/contact" className="btn-primary w-full sm:w-auto xl:px-8 xl:py-4 xl:text-base">
               Book a free call
-              <ArrowRight className="h-4 w-4" />
+              <ArrowRight className="h-4 w-4 xl:h-5 xl:w-5" />
             </Link>
-            <Link to="/#products" className="btn-secondary">
+            <Link to="/#products" className="btn-secondary w-full sm:w-auto xl:px-8 xl:py-4 xl:text-base">
               Browse all products
             </Link>
           </div>
