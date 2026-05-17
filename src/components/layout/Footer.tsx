@@ -71,7 +71,14 @@ export default function Footer() {
               Contact
             </h4>
             <ul className="mt-4 space-y-3 text-sm text-ink">
-              <li>hello@ealize.com</li>
+              <li>
+                <a
+                  href="mailto:ealizesolutions@gmail.com"
+                  className="hover:text-brand"
+                >
+                  ealizesolutions@gmail.com
+                </a>
+              </li>
               <li className="text-muted">We reply within 24h</li>
             </ul>
           </div>
