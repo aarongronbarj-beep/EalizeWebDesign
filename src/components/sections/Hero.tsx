@@ -64,7 +64,11 @@ export default function Hero() {
             <img
               src="https://d8j0ntlcm91z4.cloudfront.net/user_3CcbYzhdThonLOKY1pxtDFoMUBi/hf_20260518_174853_95ed6c94-f179-46f2-b27f-c34e38b817e1.png"
               alt="Ealize AI products — business intelligence dashboard and automation"
-              className="relative z-10 w-full max-w-[420px] rounded-3xl drop-shadow-[0_30px_60px_rgba(15,15,15,0.18)] xl:max-w-[500px] 2xl:max-w-[580px]"
+              className="relative z-10 w-full max-w-[420px] drop-shadow-[0_30px_60px_rgba(15,15,15,0.18)] xl:max-w-[500px] 2xl:max-w-[580px]"
+              style={{
+                maskImage: 'radial-gradient(ellipse 85% 90% at 50% 45%, black 0%, black 60%, transparent 100%)',
+                WebkitMaskImage: 'radial-gradient(ellipse 85% 90% at 50% 45%, black 0%, black 60%, transparent 100%)',
+              }}
             />
           </div>
         </div>
