@@ -135,43 +135,44 @@ export default function BusinessIntelligence() {
   return (
     <>
       {/* Hero */}
-      <section className="relative flex h-screen min-h-[640px] flex-col overflow-hidden bg-hero-gradient">
-        <div className="pointer-events-none absolute -left-20 top-20 h-72 w-72 rounded-full bg-cream/60 blur-3xl xl:h-96 xl:w-96" />
-        <div className="pointer-events-none absolute -right-20 top-40 h-80 w-80 rounded-full bg-sky/60 blur-3xl xl:h-[28rem] xl:w-[28rem]" />
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center_top,_rgba(99,91,255,0.06),_transparent_60%)]" />
+      <section className="relative overflow-hidden bg-hero-gradient pt-28 pb-14 md:pt-32 md:pb-20 xl:pt-40 xl:pb-28 2xl:pt-48 2xl:pb-36">
+        <div className="container-content">
+          <div className="grid items-center gap-10 md:grid-cols-[1.1fr_1fr] md:gap-10 lg:gap-16 xl:grid-cols-[1fr_1fr] xl:gap-20 2xl:gap-28">
+            <div>
+              <span className="eyebrow">01 · Product</span>
+              <h1 className="mt-5 font-heading text-4xl font-bold leading-[1.05] tracking-tight text-ink sm:text-5xl md:text-6xl lg:text-[64px] xl:text-[72px] 2xl:text-[88px]">
+                Business{' '}
+                <span className="relative inline-block whitespace-nowrap text-brand">
+                  <span className="relative z-10">Intelligence</span>
+                  <span className="absolute -bottom-1 left-0 right-0 h-[3px] rounded-full bg-brand/60" />
+                </span>
+              </h1>
+              <p className="mt-6 text-base leading-relaxed text-muted sm:mt-8 md:text-lg xl:text-xl xl:leading-relaxed 2xl:text-2xl">
+                Revenue, customers, inbox, and marketing — one dashboard, always in sync.
+                Connect Gmail, Stripe, and HubSpot in minutes and stop switching tabs to understand your business.
+              </p>
 
-        <div className="container-content relative flex flex-1 flex-col pt-24 md:pt-28 xl:pt-32">
-          <div className="mx-auto max-w-3xl text-center xl:max-w-4xl">
-            <span className="eyebrow justify-center">01 · Product</span>
-            <h1 className="mt-3 font-heading text-3xl font-bold leading-[1.05] tracking-tight text-ink sm:text-4xl md:text-5xl lg:text-[52px] xl:text-[64px] 2xl:text-[72px]">
-              Business{' '}
-              <span className="relative inline-block whitespace-nowrap text-brand">
-                <span className="relative z-10">Intelligence</span>
-                <span className="absolute -bottom-1 left-0 right-0 h-[3px] rounded-full bg-brand/60" />
-              </span>{' '}
-              built for clarity.
-            </h1>
-            <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-muted md:text-base xl:text-lg">
-              Revenue, customers, inbox, and marketing — one dashboard, always in sync.
-            </p>
-
-            <div className="mt-5 flex flex-col items-center justify-center gap-3 sm:flex-row sm:flex-wrap">
-              <Link to="/contact" className="btn-primary">
-                Book a demo
-                <ArrowRight className="h-4 w-4" />
-              </Link>
-              <a href="#integrations" className="btn-secondary">
-                See connected sources
-              </a>
+              <div className="mt-6 flex flex-col gap-3 sm:mt-8 sm:flex-row sm:flex-wrap sm:items-center">
+                <Link to="/contact" className="btn-primary xl:px-8 xl:py-4 xl:text-base">
+                  Book a demo
+                  <ArrowRight className="h-4 w-4 xl:h-5 xl:w-5" />
+                </Link>
+                <a href="#integrations" className="btn-secondary xl:px-8 xl:py-4 xl:text-base">
+                  See connected sources
+                </a>
+              </div>
             </div>
-          </div>
 
-          <div className="relative mx-auto mt-6 flex min-h-0 w-full max-w-6xl flex-1 items-end justify-center md:mt-8 xl:mt-10">
-            <img
-              src="/dashboardpage.png"
-              alt="Ealize Business Intelligence dashboard"
-              className="relative z-10 block max-h-full w-auto max-w-full rounded-t-2xl object-contain drop-shadow-[0_30px_60px_rgba(15,15,15,0.18)] xl:rounded-t-3xl"
-            />
+            <div className="relative flex items-center justify-center md:-mt-10 lg:-mt-16 xl:-mt-20">
+              <div className="pointer-events-none absolute -left-10 top-10 h-48 w-48 rounded-full bg-cream/80 blur-3xl xl:h-72 xl:w-72" />
+              <div className="pointer-events-none absolute -right-10 bottom-10 h-56 w-56 rounded-full bg-sky/80 blur-3xl xl:h-80 xl:w-80" />
+              <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(99,91,255,0.08),_transparent_60%)]" />
+              <img
+                src="/dashboardpage.png"
+                alt="Ealize Business Intelligence dashboard"
+                className="relative z-10 w-full max-w-[480px] rounded-2xl drop-shadow-[0_30px_60px_rgba(15,15,15,0.18)] md:max-w-full xl:rounded-3xl"
+              />
+            </div>
           </div>
         </div>
       </section>
