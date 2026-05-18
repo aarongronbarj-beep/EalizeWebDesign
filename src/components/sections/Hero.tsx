@@ -67,9 +67,9 @@ export default function Hero() {
               className="relative z-10 w-full max-w-[420px] xl:max-w-[500px] 2xl:max-w-[580px]"
               style={{
                 maskImage:
-                  'radial-gradient(ellipse 70% 80% at 50% 50%, black 40%, rgba(0,0,0,0.6) 70%, transparent 100%)',
+                  'radial-gradient(ellipse 55% 70% at 50% 50%, black 20%, rgba(0,0,0,0.85) 40%, rgba(0,0,0,0.3) 65%, transparent 85%)',
                 WebkitMaskImage:
-                  'radial-gradient(ellipse 70% 80% at 50% 50%, black 40%, rgba(0,0,0,0.6) 70%, transparent 100%)',
+                  'radial-gradient(ellipse 55% 70% at 50% 50%, black 20%, rgba(0,0,0,0.85) 40%, rgba(0,0,0,0.3) 65%, transparent 85%)',
               }}
             />
           </div>
