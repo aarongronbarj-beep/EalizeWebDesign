@@ -135,44 +135,45 @@ export default function BusinessIntelligence() {
   return (
     <>
       {/* Hero */}
-      <section className="relative overflow-hidden bg-hero-gradient pt-28 pb-14 md:pt-32 md:pb-20 xl:pt-40 xl:pb-28 2xl:pt-48 2xl:pb-36">
-        <div className="container-content">
-          <div className="grid items-center gap-10 md:grid-cols-[1.1fr_1fr] md:gap-10 lg:gap-16 xl:grid-cols-[1fr_1fr] xl:gap-20 2xl:gap-28">
-            <div>
-              <span className="eyebrow">01 · Product</span>
-              <h1 className="mt-5 font-heading text-4xl font-bold leading-[1.05] tracking-tight text-ink sm:text-5xl md:text-6xl lg:text-[64px] xl:text-[72px] 2xl:text-[88px]">
-                Business{' '}
-                <span className="relative inline-block whitespace-nowrap text-brand">
-                  <span className="relative z-10">Intelligence</span>
-                  <span className="absolute -bottom-1 left-0 right-0 h-[3px] rounded-full bg-brand/60" />
-                </span>
-              </h1>
-              <p className="mt-6 text-base leading-relaxed text-muted sm:mt-8 md:text-lg xl:text-xl xl:leading-relaxed 2xl:text-2xl">
-                Revenue, customers, inbox, and marketing — one dashboard, always in sync.
-                Connect Gmail, Stripe, and HubSpot in minutes and stop switching tabs to understand your business.
-              </p>
+      <section className="relative overflow-hidden bg-hero-gradient pt-28 pb-0 md:pt-32 xl:pt-40">
+        <div className="pointer-events-none absolute -left-20 top-20 h-72 w-72 rounded-full bg-cream/60 blur-3xl xl:h-96 xl:w-96" />
+        <div className="pointer-events-none absolute -right-20 top-40 h-80 w-80 rounded-full bg-sky/60 blur-3xl xl:h-[28rem] xl:w-[28rem]" />
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center_top,_rgba(99,91,255,0.06),_transparent_60%)]" />
 
-              <div className="mt-6 flex flex-col gap-3 sm:mt-8 sm:flex-row sm:flex-wrap sm:items-center">
-                <Link to="/contact" className="btn-primary xl:px-8 xl:py-4 xl:text-base">
-                  Book a demo
-                  <ArrowRight className="h-4 w-4 xl:h-5 xl:w-5" />
-                </Link>
-                <a href="#integrations" className="btn-secondary xl:px-8 xl:py-4 xl:text-base">
-                  See connected sources
-                </a>
-              </div>
-            </div>
+        <div className="container-content relative">
+          <div className="mx-auto max-w-3xl text-center xl:max-w-4xl">
+            <span className="eyebrow justify-center">01 · Product</span>
+            <h1 className="mt-6 font-heading text-4xl font-bold leading-[1.05] tracking-tight text-ink sm:text-5xl md:text-6xl lg:text-[64px] xl:text-[76px] 2xl:text-[88px]">
+              Business{' '}
+              <span className="relative inline-block whitespace-nowrap text-brand">
+                <span className="relative z-10">Intelligence</span>
+                <span className="absolute -bottom-1 left-0 right-0 h-[3px] rounded-full bg-brand/60" />
+              </span>
+              <br className="hidden sm:block" />
+              <span className="text-ink"> built for clarity.</span>
+            </h1>
+            <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-muted sm:mt-8 md:text-lg xl:text-xl xl:leading-relaxed">
+              Revenue, customers, inbox, and marketing — one dashboard, always in sync.
+              Connect Gmail, Stripe, and HubSpot in minutes and stop switching tabs to understand your business.
+            </p>
 
-            <div className="relative flex items-center justify-center md:-mt-10 lg:-mt-16 xl:-mt-20">
-              <div className="pointer-events-none absolute -left-10 top-10 h-48 w-48 rounded-full bg-cream/80 blur-3xl xl:h-72 xl:w-72" />
-              <div className="pointer-events-none absolute -right-10 bottom-10 h-56 w-56 rounded-full bg-sky/80 blur-3xl xl:h-80 xl:w-80" />
-              <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(99,91,255,0.08),_transparent_60%)]" />
-              <img
-                src="/dashboardpage.png"
-                alt="Ealize Business Intelligence dashboard"
-                className="relative z-10 w-full max-w-[480px] rounded-2xl drop-shadow-[0_30px_60px_rgba(15,15,15,0.18)] md:max-w-full xl:rounded-3xl"
-              />
+            <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row sm:flex-wrap">
+              <Link to="/contact" className="btn-primary xl:px-8 xl:py-4 xl:text-base">
+                Book a demo
+                <ArrowRight className="h-4 w-4 xl:h-5 xl:w-5" />
+              </Link>
+              <a href="#integrations" className="btn-secondary xl:px-8 xl:py-4 xl:text-base">
+                See connected sources
+              </a>
             </div>
+          </div>
+
+          <div className="relative mx-auto mt-14 max-w-5xl md:mt-20 xl:mt-24 2xl:max-w-6xl">
+            <img
+              src="/dashboardpage.png"
+              alt="Ealize Business Intelligence dashboard"
+              className="relative z-10 w-full rounded-t-2xl drop-shadow-[0_30px_60px_rgba(15,15,15,0.18)] xl:rounded-t-3xl"
+            />
           </div>
         </div>
       </section>
