@@ -62,9 +62,15 @@ export default function Hero() {
             <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(99,91,255,0.08),_transparent_60%)]" />
 
             <img
-              src="https://d8j0ntlcm91z4.cloudfront.net/user_3CcbYzhdThonLOKY1pxtDFoMUBi/hf_20260518_180434_bd488f43-6f9c-41ae-8068-ae99e48b6897.png"
+              src="https://d8j0ntlcm91z4.cloudfront.net/user_3CcbYzhdThonLOKY1pxtDFoMUBi/hf_20260518_181038_e6d978fc-5762-4f8c-ae9c-b3088bf88680.png"
               alt="Ealize AI products — business intelligence dashboard and automation"
-              className="relative z-10 w-full max-w-[420px] drop-shadow-[0_30px_60px_rgba(15,15,15,0.18)] xl:max-w-[500px] 2xl:max-w-[580px]"
+              className="relative z-10 w-full max-w-[420px] xl:max-w-[500px] 2xl:max-w-[580px]"
+              style={{
+                maskImage:
+                  'radial-gradient(ellipse 70% 80% at 50% 50%, black 40%, rgba(0,0,0,0.6) 70%, transparent 100%)',
+                WebkitMaskImage:
+                  'radial-gradient(ellipse 70% 80% at 50% 50%, black 40%, rgba(0,0,0,0.6) 70%, transparent 100%)',
+              }}
             />
           </div>
         </div>
